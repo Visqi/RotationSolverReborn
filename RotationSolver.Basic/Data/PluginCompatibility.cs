@@ -136,7 +136,7 @@ internal static class PluginCompatibility
 			Icon = "https://s3.puni.sh/media/plugin/60/icon-2bwhkn3zf1f.png",
 			Url = "https://github.com/PunishXIV/WrathCombo",
 			Features = "Fork of XIVSlothCombo, may have issues with auto rotation and targetting conflicts",
-			Type = CompatibleType.Skill_Usage | CompatibleType.Broken
+			Type = CompatibleType.Skill_Usage | CompatibleType.Broken | CompatibleType.Crash
 		},
 		new()
 		{
@@ -177,6 +177,14 @@ internal static class PluginCompatibility
 			Url = "https://github.com/Taurenkey/ReActionEX",
 			Features = "May have issues with skill queueing settings",
 			Type = CompatibleType.Skill_Usage
+		},
+		new()
+		{
+			Name = "Olympus",
+			Icon = "",
+			Url = "https://github.com/RoseOfficial/Olympus",
+			Features = "AI slop clone of RSR",
+			Type = CompatibleType.Skill_Usage | CompatibleType.Broken | CompatibleType.Crash
 		}
 	];
 }
