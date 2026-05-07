@@ -1,5 +1,4 @@
 ﻿using Dalamud.Game.ClientState.Conditions;
-using Dalamud.Game.ClientState.Objects.SubKinds;
 using ECommons.DalamudServices;
 using ECommons.EzIpcManager;
 using ECommons.GameHelpers;
@@ -60,14 +59,14 @@ internal static class ActionUpdater
 		ActionTracer.Enabled = Service.Config.EnableActionTracer;
 		ActionTracer.MirrorToPluginLog = Service.Config.TraceMirrorToPluginLog;
 
-		IPlayerCharacter? localPlayer = Player.Object;
-		ICustomRotation? customRotation = DataCenter.CurrentRotation;
+		var localPlayer = Player.Object;
+		var customRotation = DataCenter.CurrentRotation;
 
 		ActionTracer.BeginFrame();
 		try
 		{
 			if (localPlayer != null && customRotation != null
-				&& customRotation.TryInvoke(out IAction? newAction, out IAction? gcdAction))
+				&& customRotation.TryInvoke(out var newAction, out var gcdAction))
 			{
 				NextAction = newAction;
 				NextGCDAction = gcdAction as IBaseAction;
@@ -107,7 +106,7 @@ internal static class ActionUpdater
 	private static DateTime _startCombatTime = DateTime.MinValue;
 	private static void UpdateCombatTime(DateTime now)
 	{
-		bool lastInCombat = DataCenter.InCombat;
+		var lastInCombat = DataCenter.InCombat;
 		DataCenter.InCombat = Svc.Condition[ConditionFlag.InCombat];
 
 		if (!lastInCombat && DataCenter.InCombat)
@@ -131,7 +130,7 @@ internal static class ActionUpdater
 
 	private static unsafe void UpdateSlots()
 	{
-		ActionManager* actionManager = ActionManager.Instance();
+		var actionManager = ActionManager.Instance();
 		if (actionManager == null)
 		{
 			return;
@@ -139,7 +138,7 @@ internal static class ActionUpdater
 
 		if (DataCenter.Job == ECommons.ExcelServices.Job.BLU)
 		{
-			for (int i = 0; i < DataCenter.BluSlots.Length; i++)
+			for (var i = 0; i < DataCenter.BluSlots.Length; i++)
 			{
 				DataCenter.BluSlots[i] = actionManager->GetActiveBlueMageActionInSlot(i);
 			}
@@ -192,7 +191,7 @@ internal static class ActionUpdater
 			return;
 		}
 
-		bool lastDead = _isDead;
+		var lastDead = _isDead;
 		_isDead = player.IsDead;
 
 		if (Svc.Condition[ConditionFlag.BetweenAreas])
@@ -261,7 +260,7 @@ internal static class ActionUpdater
 			return false;
 		}
 
-		bool isPvPPurifyNeeded = DataCenter.IsPvP && StatusHelper.PlayerHasStatus(false, StatusHelper.PurifyPvPStatuses);
+		var isPvPPurifyNeeded = DataCenter.IsPvP && StatusHelper.PlayerHasStatus(false, StatusHelper.PurifyPvPStatuses);
 		if (!isPvPPurifyNeeded && IsPlayerOccupied())
 		{
 			return false;
@@ -309,7 +308,9 @@ internal static class ActionUpdater
 			if (!DataCenter.IsPvP)
 			{
 				if (status != null && StatusHelper.LockActions(status) == true && status.RemainingTime > 1 + DataCenter.DefaultGCDRemain)
+				{
 					return true;
+				}
 			}
 		}
 		return false;
@@ -342,7 +343,7 @@ internal static class ActionUpdater
 			return true;
 		}
 
-		ActionManager* am = ActionManager.Instance();
+		var am = ActionManager.Instance();
 		if (am != null
 			&& am->ActionQueued
 			&& NextAction != null

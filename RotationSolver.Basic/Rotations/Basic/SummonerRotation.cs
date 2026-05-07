@@ -787,7 +787,7 @@ public partial class SummonerRotation
 
 	static partial void ModifyCrimsonCyclonePvE(ref ActionSetting setting)
 	{
-		//setting.SpecialType = SpecialActionType.HostileMovingForward;
+		setting.SpecialType = SpecialActionType.HostileMovingAttack;
 		setting.StatusProvide = [StatusID.CrimsonStrikeReady_4403];
 		setting.StatusNeed = [StatusID.IfritsFavor];
 		setting.CreateConfig = () => new ActionConfig()
@@ -912,7 +912,7 @@ public partial class SummonerRotation
 
 	static partial void ModifyCrimsonCyclonePvP(ref ActionSetting setting)
 	{
-		//setting.SpecialType = SpecialActionType.HostileMovingForward;
+		setting.SpecialType = SpecialActionType.HostileMovingAttack;
 		setting.StatusProvide = [StatusID.CrimsonStrikeReady_4403];
 		setting.CreateConfig = () => new ActionConfig()
 		{

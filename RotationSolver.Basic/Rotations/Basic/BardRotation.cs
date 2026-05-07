@@ -178,7 +178,7 @@ public partial class BardRotation
 	static partial void ModifyRepellingShotPvE(ref ActionSetting setting)
 	{
 		setting.UnlockedByQuestID = 65604;
-		setting.SpecialType = SpecialActionType.MovingBackward;
+		setting.SpecialType = SpecialActionType.FixedDistanceMoveBackward;
 	}
 
 	static partial void ModifyQuickNockPvE(ref ActionSetting setting)
@@ -402,9 +402,12 @@ public partial class BardRotation
 		setting.ActionCheck = () =>
 		{
 			var coda = JobGauge.Coda;
-			for (int i = 0; i < coda.Length; i++)
+			for (var i = 0; i < coda.Length; i++)
 			{
-				if (coda[i] != Song.None) return true;
+				if (coda[i] != Song.None)
+				{
+					return true;
+				}
 			}
 			return false;
 		};
@@ -480,7 +483,7 @@ public partial class BardRotation
 
 	static partial void ModifyRepellingShotPvP(ref ActionSetting setting)
 	{
-		setting.SpecialType = SpecialActionType.MovingBackward;
+		setting.SpecialType = SpecialActionType.FixedDistanceMoveBackward;
 	}
 
 	static partial void ModifyEncoreOfLightPvP(ref ActionSetting setting)

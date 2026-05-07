@@ -86,7 +86,7 @@ public partial class CustomRotation
 			return true;
 		}
 
-		JobRole role = DataCenter.Role;
+		var role = DataCenter.Role;
 
 		IBaseAction.TargetOverride = TargetType.Interrupt;
 		if (DataCenter.MergedStatus.HasFlag(AutoStatus.Interrupt) && !StatusHelper.PlayerHasStatus(true, StatusID.Mudra))

@@ -58,7 +58,9 @@ public static class MaskedCarnivaleHelper
 		{
 			var nameId = row.BNpcName.RowId;
 			if (nameId == 0)
+			{
 				continue;
+			}
 
 			dict[nameId] = new MobData(
 				row.Fire, row.Ice, row.Wind, row.Earth, row.Thunder, row.Water,
@@ -79,7 +81,10 @@ public static class MaskedCarnivaleHelper
 	public static MobResistance GetAspectResistance(IBattleChara target, Aspect aspect)
 	{
 		if (target == null)
+		{
 			return MobResistance.Normal;
+		}
+
 		return GetAspectResistance(target.NameId, aspect);
 	}
 
@@ -90,7 +95,9 @@ public static class MaskedCarnivaleHelper
 	public static MobResistance GetAspectResistance(uint nameId, Aspect aspect)
 	{
 		if (!MobDataByNameId.TryGetValue(nameId, out var data))
+		{
 			return MobResistance.Normal;
+		}
 
 		byte raw = aspect switch
 		{
@@ -116,7 +123,10 @@ public static class MaskedCarnivaleHelper
 	public static MobResistance GetAttackTypeResistance(IBattleChara target, Data.AttackType attackType)
 	{
 		if (target == null)
+		{
 			return MobResistance.Normal;
+		}
+
 		return GetAttackTypeResistance(target.NameId, attackType);
 	}
 
@@ -127,7 +137,9 @@ public static class MaskedCarnivaleHelper
 	public static MobResistance GetAttackTypeResistance(uint nameId, Data.AttackType attackType)
 	{
 		if (!MobDataByNameId.TryGetValue(nameId, out var data))
+		{
 			return MobResistance.Normal;
+		}
 
 		byte raw = attackType switch
 		{
@@ -149,9 +161,14 @@ public static class MaskedCarnivaleHelper
 	public static bool HasNoResistancesOrImmunities(IBattleChara target)
 	{
 		if (target == null)
+		{
 			return true;
+		}
+
 		if (!MobDataByNameId.TryGetValue(target.NameId, out var data))
+		{
 			return true;
+		}
 
 		return data.Fire == 0 && data.Ice == 0 && data.Wind == 0 &&
 			   data.Earth == 0 && data.Thunder == 0 && data.Water == 0 &&
@@ -184,12 +201,16 @@ public static class MaskedCarnivaleHelper
 	public static bool IsActionAspectAllowed(IBattleChara target, IBaseAction action)
 	{
 		if (target == null || action == null)
+		{
 			return true;
+		}
 
 		foreach (var aspect in action.Info.Aspects)
 		{
 			if (IsImmuneToAspect(target, aspect))
+			{
 				return false;
+			}
 		}
 
 		return true;
@@ -202,12 +223,16 @@ public static class MaskedCarnivaleHelper
 	public static bool IsActionAspectWeak(IBattleChara target, IBaseAction action)
 	{
 		if (target == null || action == null)
+		{
 			return false;
+		}
 
 		foreach (var aspect in action.Info.Aspects)
 		{
 			if (IsWeakToAspect(target, aspect))
+			{
 				return true;
+			}
 		}
 
 		return false;

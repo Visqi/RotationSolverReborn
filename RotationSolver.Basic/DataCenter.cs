@@ -229,8 +229,8 @@ internal static class DataCenter
 
 	internal static void AddCommandAction(IAction act, double time)
 	{
-		int index = -1;
-		for (int i = 0; i < NextActs.Count; i++)
+		var index = -1;
+		for (var i = 0; i < NextActs.Count; i++)
 		{
 			if (NextActs[i].Act.ID == act.ID)
 			{
@@ -406,7 +406,7 @@ internal static class DataCenter
 	{
 		get
 		{
-			int currentFrame = Environment.TickCount;
+			var currentFrame = Environment.TickCount;
 			if (_lastTargetFrame != currentFrame)
 			{
 				_cachedJobRange = JobRange;
@@ -431,12 +431,12 @@ internal static class DataCenter
 	{
 		get
 		{
-			float total = 0f;
-			int count = 0;
+			var total = 0f;
+			var count = 0;
 			var targets = AllHostileTargets;
 			for (int i = 0, n = targets.Count; i < n; i++)
 			{
-				float ttk = targets[i].GetTTK();
+				var ttk = targets[i].GetTTK();
 				if (!float.IsNaN(ttk))
 				{
 					total += ttk;
@@ -475,10 +475,12 @@ internal static class DataCenter
 				151, 174, 372, 508, 556, 627, 734, 776, 826, 882, 917, 966, 1054, 1118, 1178, 1248, 1304, 1368
 			];
 
-			for (int i = 0; i < allianceTerritoryIds.Length; i++)
+			for (var i = 0; i < allianceTerritoryIds.Length; i++)
 			{
 				if (allianceTerritoryIds[i] == TerritoryID)
+				{
 					return true;
+				}
 			}
 
 			return false;
@@ -758,7 +760,7 @@ internal static class DataCenter
 				return BlueMageRotation.Role;
 			}
 
-			ClassJob classJob = Service.GetSheet<ClassJob>().GetRow((uint)Job);
+			var classJob = Service.GetSheet<ClassJob>().GetRow((uint)Job);
 			return classJob.RowId != 0 ? classJob.GetJobRole() : JobRole.None;
 		}
 	}
@@ -791,7 +793,9 @@ internal static class DataCenter
 	public static unsafe bool SylphManagementFinished()
 	{
 		if (UIState.Instance()->IsUnlockLinkUnlockedOrQuestCompleted(66049))
+		{
 			return true;
+		}
 
 		return false;
 	}
@@ -802,7 +806,11 @@ internal static class DataCenter
 	public static bool BaseClass()
 	{
 		// FFXIV base classes: 1-7, 26, 29 (GLA, PGL, MRD, LNC, ARC, CNJ, THM, ACN, ROG)
-		if (Svc.Objects.LocalPlayer == null) return false;
+		if (Svc.Objects.LocalPlayer == null)
+		{
+			return false;
+		}
+
 		var rowId = Svc.Objects.LocalPlayer.ClassJob.RowId;
 		return (rowId >= 1 && rowId <= 7) || rowId == 26 || rowId == 29;
 	}
@@ -864,32 +872,32 @@ internal static class DataCenter
 	{
 		get
 		{
-			BattleChara* playerBattleChara = Player.BattleChara;
+			var playerBattleChara = Player.BattleChara;
 			if (playerBattleChara == null)
 			{
 				return false;
 			}
 
-			CharacterManager* characterManager = CharacterManager.Instance();
+			var characterManager = CharacterManager.Instance();
 			if (characterManager == null)
 			{
 				return false;
 			}
 
-			BattleChara* companion = characterManager->LookupBuddyByOwnerObject(playerBattleChara);
+			var companion = characterManager->LookupBuddyByOwnerObject(playerBattleChara);
 			return (IntPtr)companion != IntPtr.Zero;
 		}
 	}
 
 	public static unsafe BattleChara* GetCompanion()
 	{
-		BattleChara* playerBattleChara = Player.BattleChara;
+		var playerBattleChara = Player.BattleChara;
 		if (playerBattleChara == null)
 		{
 			return null;
 		}
 
-		CharacterManager* characterManager = CharacterManager.Instance();
+		var characterManager = CharacterManager.Instance();
 		return characterManager == null ? (BattleChara*)null : characterManager->LookupBuddyByOwnerObject(playerBattleChara);
 	}
 
@@ -930,7 +938,7 @@ internal static class DataCenter
 		get
 		{
 			Dictionary<ulong, float> refinedHP = [];
-			foreach (IBattleChara member in PartyMembers)
+			foreach (var member in PartyMembers)
 			{
 				try
 				{
@@ -957,17 +965,20 @@ internal static class DataCenter
 	{
 		ArgumentNullException.ThrowIfNull(member);
 
-		if (member.MaxHp == 0) return 0f;
+		if (member.MaxHp == 0)
+		{
+			return 0f;
+		}
 
-		if (!InEffectTime || !HealHP.TryGetValue(member.GameObjectId, out uint healedHp))
+		if (!InEffectTime || !HealHP.TryGetValue(member.GameObjectId, out var healedHp))
 		{
 			return (float)member.CurrentHp / member.MaxHp;
 		}
 
-		uint currentHp = member.CurrentHp;
+		var currentHp = member.CurrentHp;
 		if (currentHp > 0)
 		{
-			_ = _lastHp.TryGetValue(member.GameObjectId, out uint lastHp);
+			_ = _lastHp.TryGetValue(member.GameObjectId, out var lastHp);
 
 			if (currentHp - lastHp == healedHp)
 			{
@@ -992,19 +1003,24 @@ internal static class DataCenter
 	private static readonly float[] _hpBuffer = new float[8];
 	private static void UpdatePartyHpCache()
 	{
-		int currentFrame = Environment.TickCount;
+		var currentFrame = Environment.TickCount;
 		if (_partyHpCacheFrame == currentFrame)
+		{
 			return;
+		}
 
-		int hpCount = 0;
+		var hpCount = 0;
 		foreach (var member in PartyMembers)
 		{
 			if (member.GameObjectId != 0 && hpCount < _hpBuffer.Length)
 			{
 				try
 				{
-					float hp = GetPartyMemberHPRatio(member);
-					if (hp > 0) _hpBuffer[hpCount++] = hp;
+					var hp = GetPartyMemberHPRatio(member);
+					if (hp > 0)
+					{
+						_hpBuffer[hpCount++] = hp;
+					}
 				}
 				catch (AccessViolationException ex)
 				{
@@ -1032,25 +1048,32 @@ internal static class DataCenter
 
 		float sum = 0;
 		float lowestHpMembersSum = 0;
-		float min = float.MaxValue;
-		for (int i = 0; i < hpCount; i++)
+		var min = float.MaxValue;
+		for (var i = 0; i < hpCount; i++)
 		{
 			sum += _hpBuffer[i];
-			if (i < 4) lowestHpMembersSum += _hpBuffer[i];
-			if (_hpBuffer[i] < min) min = _hpBuffer[i];
+			if (i < 4)
+			{
+				lowestHpMembersSum += _hpBuffer[i];
+			}
+
+			if (_hpBuffer[i] < min)
+			{
+				min = _hpBuffer[i];
+			}
 		}
 
-		float avg = sum / hpCount;
-		float lowestHpMembersAvg = lowestHpMembersSum / (hpCount > 4 ? 4 : hpCount);
+		var avg = sum / hpCount;
+		var lowestHpMembersAvg = lowestHpMembersSum / (hpCount > 4 ? 4 : hpCount);
 		float variance = 0;
 		float lowestHpMembersVariance = 0;
-		for (int i = 0; i < hpCount; i++)
+		for (var i = 0; i < hpCount; i++)
 		{
-			float diff = _hpBuffer[i] - avg;
+			var diff = _hpBuffer[i] - avg;
 			variance += diff * diff;
 			if (i < 4)
 			{
-				float lowestHpMembersDiff = _hpBuffer[i] - lowestHpMembersAvg;
+				var lowestHpMembersDiff = _hpBuffer[i] - lowestHpMembersAvg;
 				lowestHpMembersVariance += lowestHpMembersDiff * lowestHpMembersDiff;
 			}
 		}
@@ -1094,16 +1117,26 @@ internal static class DataCenter
 		{
 			UpdatePartyHpCache();
 			// Return a snapshot of the current frame's HPs
-			if (_partyHpCount == 0) yield break;
+			if (_partyHpCount == 0)
+			{
+				yield break;
+			}
 
 			var hpList = new List<float>();
 			foreach (var member in PartyMembers)
 			{
 				try
 				{
-					if (member == null || member.GameObjectId == 0) continue;
-					float hp = GetPartyMemberHPRatio(member);
-					if (hp > 0) hpList.Add(hp);
+					if (member == null || member.GameObjectId == 0)
+					{
+						continue;
+					}
+
+					var hp = GetPartyMemberHPRatio(member);
+					if (hp > 0)
+					{
+						hpList.Add(hp);
+					}
 				}
 				catch (AccessViolationException ex)
 				{
@@ -1136,7 +1169,7 @@ internal static class DataCenter
 			try
 			{
 				List<DamageRec> recs = [];
-				foreach (DamageRec rec in _damages)
+				foreach (var rec in _damages)
 				{
 					if (DateTime.Now - rec.ReceiveTime < TimeSpan.FromMilliseconds(5))
 					{
@@ -1150,13 +1183,13 @@ internal static class DataCenter
 				}
 
 				float damages = 0;
-				for (int i = 0; i < recs.Count; i++)
+				for (var i = 0; i < recs.Count; i++)
 				{
 					damages += recs[i].Ratio;
 				}
-				DateTime first = recs[0].ReceiveTime;
-				DateTime last = recs[^1].ReceiveTime;
-				TimeSpan time = last - first + TimeSpan.FromMilliseconds(2.5f);
+				var first = recs[0].ReceiveTime;
+				var last = recs[^1].ReceiveTime;
+				var time = last - first + TimeSpan.FromMilliseconds(2.5f);
 
 				return damages / (float)time.TotalSeconds;
 			}
@@ -1171,9 +1204,9 @@ internal static class DataCenter
 	{
 		get
 		{
-			ActionRec[] arr = new ActionRec[_actions.Count];
-			int i = _actions.Count - 1;
-			foreach (ActionRec rec in _actions)
+			var arr = new ActionRec[_actions.Count];
+			var i = _actions.Count - 1;
+			foreach (var rec in _actions)
 			{
 				arr[i--] = rec;
 			}
@@ -1191,7 +1224,7 @@ internal static class DataCenter
 
 	internal static unsafe void AddActionRec(Action act)
 	{
-		ActionID id = (ActionID)act.RowId;
+		var id = (ActionID)act.RowId;
 
 		//Record
 		switch (act.GetActionCate())
@@ -1226,7 +1259,8 @@ internal static class DataCenter
 		_actions.Clear();
 
 		AttackedTargets.Clear();
-		while (VfxDataQueue.TryDequeue(out _)) { }
+		while (VfxDataQueue.TryDequeue(out _))
+		{ }
 		AllHostileTargets.Clear();
 		AllianceMembers.Clear();
 		PartyMembers.Clear();
@@ -1256,9 +1290,9 @@ internal static class DataCenter
 	{
 		get
 		{
-			float jobRange = JobRange;
+			var jobRange = JobRange;
 			var targets = AllHostileTargets;
-			int count = 0;
+			var count = 0;
 			for (int i = 0, n = targets.Count; i < n; i++)
 			{
 				if (targets[i].DistanceToPlayer() < jobRange)
@@ -1274,7 +1308,7 @@ internal static class DataCenter
 		get
 		{
 			var targets = AllHostileTargets;
-			int count = 0;
+			var count = 0;
 			for (int i = 0, n = targets.Count; i < n; i++)
 			{
 				if (targets[i].DistanceToPlayer() < 25)
@@ -1288,7 +1322,7 @@ internal static class DataCenter
 	public static int NumberOfHostilesInRangeOf(float range)
 	{
 		var targets = AllHostileTargets;
-		int count = 0;
+		var count = 0;
 		for (int i = 0, n = targets.Count; i < n; i++)
 		{
 			if (targets[i].DistanceToPlayer() < range)
@@ -1302,7 +1336,7 @@ internal static class DataCenter
 	public static int NumberOfPartyMembersInRangeOf(float range)
 	{
 		var targets = PartyMembers;
-		int count = 0;
+		var count = 0;
 		for (int i = 0, n = targets.Count; i < n; i++)
 		{
 			if (targets[i].DistanceToPlayer() < range)
@@ -1332,22 +1366,37 @@ internal static class DataCenter
 	public static bool IsMagicalDamageIncoming()
 	{
 		var hostileEnum = AllHostileTargets;
-		if (hostileEnum == null) return false;
+		if (hostileEnum == null)
+		{
+			return false;
+		}
 
 		var actionSheet = Service.GetSheet<Action>();
-		if (actionSheet == null) return false;
+		if (actionSheet == null)
+		{
+			return false;
+		}
 
 		for (int i = 0, n = hostileEnum.Count; i < n; i++)
 		{
 			var hostile = hostileEnum[i];
-			if (hostile == null) continue;
+			if (hostile == null)
+			{
+				continue;
+			}
 
 			try
 			{
-				if (hostile.CastActionId == 0) continue;
+				if (hostile.CastActionId == 0)
+				{
+					continue;
+				}
 
 				var action = actionSheet.GetRow(hostile.CastActionId);
-				if (action.RowId == 0) continue;
+				if (action.RowId == 0)
+				{
+					continue;
+				}
 
 				// AttackType row id 5 interpreted as magical.
 				if (action.AttackType.RowId == 5)
@@ -1377,22 +1426,37 @@ internal static class DataCenter
 	public static bool IsPhysicalDamageIncoming()
 	{
 		var hostileEnum = AllHostileTargets;
-		if (hostileEnum == null) return false;
+		if (hostileEnum == null)
+		{
+			return false;
+		}
 
 		var actionSheet = Service.GetSheet<Action>();
-		if (actionSheet == null) return false;
+		if (actionSheet == null)
+		{
+			return false;
+		}
 
 		for (int i = 0, n = hostileEnum.Count; i < n; i++)
 		{
 			var hostile = hostileEnum[i];
-			if (hostile == null) continue;
+			if (hostile == null)
+			{
+				continue;
+			}
 
 			try
 			{
-				if (hostile.CastActionId == 0) continue;
+				if (hostile.CastActionId == 0)
+				{
+					continue;
+				}
 
 				var action = actionSheet.GetRow(hostile.CastActionId);
-				if (action.RowId == 0) continue;
+				if (action.RowId == 0)
+				{
+					continue;
+				}
 
 				// AttackType row id 7 interpreted as physical.
 				if (action.AttackType.RowId == 7)
@@ -1416,12 +1480,18 @@ internal static class DataCenter
 		if (IsInM10S)
 		{
 			var hostileEnum = AllHostileTargets;
-			if (hostileEnum == null) return false;
+			if (hostileEnum == null)
+			{
+				return false;
+			}
 
 			for (int i = 0, n = hostileEnum.Count; i < n; i++)
 			{
 				var hostile = hostileEnum[i];
-				if (hostile == null) continue;
+				if (hostile == null)
+				{
+					continue;
+				}
 
 				try
 				{
@@ -1448,12 +1518,18 @@ internal static class DataCenter
 		if (IsInM11S)
 		{
 			var hostileEnum = AllHostileTargets;
-			if (hostileEnum == null) return false;
+			if (hostileEnum == null)
+			{
+				return false;
+			}
 
 			for (int i = 0, n = hostileEnum.Count; i < n; i++)
 			{
 				var hostile = hostileEnum[i];
-				if (hostile == null) continue;
+				if (hostile == null)
+				{
+					continue;
+				}
 
 				try
 				{
@@ -1498,14 +1574,20 @@ internal static class DataCenter
 		}
 
 		var hostileEnum = AllHostileTargets;
-		if (hostileEnum == null) return false;
+		if (hostileEnum == null)
+		{
+			return false;
+		}
 
-		bool anyCurrentlyCastingCharyb = false;
+		var anyCurrentlyCastingCharyb = false;
 
 		for (int i = 0, n = hostileEnum.Count; i < n; i++)
 		{
 			var hostile = hostileEnum[i];
-			if (hostile == null) continue;
+			if (hostile == null)
+			{
+				continue;
+			}
 
 			try
 			{
@@ -1568,23 +1650,35 @@ internal static class DataCenter
 		}
 
 		var hostileEnum = AllHostileTargets;
-		if (hostileEnum == null) return false;
+		if (hostileEnum == null)
+		{
+			return false;
+		}
 
 		for (int i = 0, n = hostileEnum.Count; i < n; i++)
 		{
 			var hostile = hostileEnum[i];
-			if (hostile == null) continue;
+			if (hostile == null)
+			{
+				continue;
+			}
 
 			try
 			{
 				// Ensure the hostile is actually casting
-				if (!hostile.IsCasting) continue;
+				if (!hostile.IsCasting)
+				{
+					continue;
+				}
 
 				// We're only interested in this specific cast id
-				if (hostile.CastActionId != 14423) continue;
+				if (hostile.CastActionId != 14423)
+				{
+					continue;
+				}
 
 				// Remaining cast time is exposed as CurrentCastTime (units consistent with other checks)
-				float remaining = hostile.TotalCastTime - hostile.CurrentCastTime;
+				var remaining = hostile.TotalCastTime - hostile.CurrentCastTime;
 
 				// If the remaining cast time is less than or equal to the player's remaining GCD,
 				// trigger as close to the last second as possible.
@@ -1617,17 +1711,26 @@ internal static class DataCenter
 		}
 
 		var hostileEnum = AllHostileTargets;
-		if (hostileEnum == null) return false;
+		if (hostileEnum == null)
+		{
+			return false;
+		}
 
 		for (int i = 0, n = hostileEnum.Count; i < n; i++)
 		{
 			var hostile = hostileEnum[i];
-			if (hostile == null) continue;
+			if (hostile == null)
+			{
+				continue;
+			}
 
 			try
 			{
 				// Ensure the hostile is actually casting
-				if (!hostile.IsCasting) continue;
+				if (!hostile.IsCasting)
+				{
+					continue;
+				}
 
 				// We're only interested in a specific set of Lakshmi cast ids
 				// Known special casts (from duty):
@@ -1637,30 +1740,36 @@ internal static class DataCenter
 				// Divine Desire - 8523 (Raidwide pull and bleed)
 				// The Path of Light - 8539 (high damage when Chanchala buffed)
 				// The Pull of Light - 8543 (high damage when Chanchala buffed)
-				uint castId = hostile.CastActionId;
+				var castId = hostile.CastActionId;
 
 				if (EmanationEX)
 				{
 					if (hostile.HasStatus(false, StatusID.Chanchala_1410))
 					{
 						if (castId != 8519 && castId != 8521 && castId != 8522 && castId != 8523 && castId != 8539 && castId != 8543)
+						{
 							continue;
+						}
 					}
 					if (!hostile.HasStatus(false, StatusID.Chanchala_1410))
 					{
 						if (castId != 8519 && castId != 8521 && castId != 8522 && castId != 8523)
+						{
 							continue;
+						}
 					}
 				}
 
 				if (Emanation)
 				{
 					if (castId != 9349)
+					{
 						continue;
+					}
 				}
 
 				// Remaining cast time is exposed as CurrentCastTime (units consistent with other checks)
-				float remaining = hostile.TotalCastTime - hostile.CurrentCastTime;
+				var remaining = hostile.TotalCastTime - hostile.CurrentCastTime;
 
 				// If the remaining cast time is less than or equal to the player's remaining GCD,
 				// trigger as close to the last second as possible.
@@ -1687,13 +1796,17 @@ internal static class DataCenter
 	[
 		"vfx/lockon/eff/tank_lockon",
 		"vfx/lockon/eff/tank_laser",
+		"vfx/lockon/eff/sharelaser2tank5sec_c0k1",
+		"vfx/lockon/eff/sharelaser2tank8sec_c0p",
 		"vfx/lockon/eff/x6fe_fan100_50_0t1",     // Necron Blue Shockwave - Cone Tankbuster
 		//"vfx/common/eff/mon_eisyo03t",           // M10 Deep Impact AoE TB need different path for this, this is the generic target vfx part
 		"vfx/lockon/eff/m0676trg_tw_d0t1p",      // M10 Hot Impact shared TB
 		"vfx/lockon/eff/m0676trg_tw_s6_d0t1p",   // M11 Raw Steel
 		"vfx/lockon/eff/z6r2b3_8sec_lockon_c0a1",// Kam'lanaut Princely Blow
 		"vfx/lockon/eff/m0742trg_b1t1",          // M7 Abominable Blink
-		"vfx/lockon/eff/x6r9_tank_lockonae"      // M9 Hardcore Large TB
+		"vfx/lockon/eff/x6r9_tank_lockonae",      // M9 Hardcore Large TB
+		"vfx/lockon/eff/z6r2b3_8sec_lockon_c0a1",  // Tankbuster line cleave knockback
+		"vfx/lockon/eff/m0926trg_t0a1"
 	], StringComparer.OrdinalIgnoreCase);
 
 	private static readonly FrozenSet<string> MultiHitSharedPaths = FrozenSet.ToFrozenSet(
@@ -1712,9 +1825,30 @@ internal static class DataCenter
 		"vfx/lockon/eff/coshare",
 		"vfx/lockon/eff/share_laser",
 		"vfx/lockon/eff/com_share",
+		"vfx/lockon/eff/share_10s_6m_0w",
+		"vfx/lockon/eff/share_12s_6m_t1",
+		"vfx/lockon/eff/share_14s_6m_t1",
+		"vfx/lockon/eff/com_trg01_0c",
+		"vfx/lockon/eff/com_trg02_0c",
+		"vfx/lockon/eff/com_trg01_0c",
+		"vfx/lockon/eff/x6r9_loc01_t0a1",
+		"vfx/lockon/eff/x6r9_loc02_t0a1",
 		// Duty-specific AOE share markers
+		"vfx/lockon/eff/m0982trg_g0c",
+		"vfx/lockon/eff/m0906_share4_7s0k2",
+		"vfx/lockon/eff/x6fd_share_4m_5s_c0v", //Zelenia EX party stack
+		"vfx/lockon/eff/bahamut_kakyu_target_t01i", // UCOB, party stack.
 		"vfx/monster/gimmick2/eff/z3o7_b1_g06c0t", // Puppet's Bunker, Superior Flight Unit.
 		"vfx/monster/gimmick4/eff/z5r1_b4_g09c0c"  // Aglaia, Nald'thal
+	], StringComparer.OrdinalIgnoreCase);
+
+	private static readonly FrozenSet<string> SpreadDamagePaths = FrozenSet.ToFrozenSet(
+	[
+		"vfx/lockon/eff/x6r9_loc01_t0a1",
+		"vfx/lockon/eff/x6r9_loc02_t0a1",
+		// Duty-specific AOE share markers
+		"vfx/lockon/eff/x6fd_loc04m_5s1v",
+		"vfx/lockon/eff/m0922tar_a0w"
 	], StringComparer.OrdinalIgnoreCase);
 
 	private static readonly StringComparison PathCmp = StringComparison.OrdinalIgnoreCase;
@@ -1729,7 +1863,7 @@ internal static class DataCenter
 			return false;
 		}
 
-		for (int i = 0; i < AllHostileTargets.Count; i++)
+		for (var i = 0; i < AllHostileTargets.Count; i++)
 		{
 			if (IsHostileCastingArea(AllHostileTargets[i]))
 			{
@@ -1749,7 +1883,7 @@ internal static class DataCenter
 			return false;
 		}
 
-		for (int i = 0; i < AllHostileTargets.Count; i++)
+		for (var i = 0; i < AllHostileTargets.Count; i++)
 		{
 			if (IsHostileCastingTank(AllHostileTargets[i]))
 			{
@@ -1769,7 +1903,7 @@ internal static class DataCenter
 			return false;
 		}
 
-		for (int i = 0; i < AllHostileTargets.Count; i++)
+		for (var i = 0; i < AllHostileTargets.Count; i++)
 		{
 			if (IsHostileStop(AllHostileTargets[i]))
 			{
@@ -1784,10 +1918,17 @@ internal static class DataCenter
 		return IsHostileCastingStopBase(h,
 			(act) =>
 			{
-				if (act.RowId == 0) return false;
+				if (act.RowId == 0)
+				{
+					return false;
+				}
+
 				foreach (var id in OtherConfiguration.HostileCastingStop)
 				{
-					if (id == act.RowId) return true;
+					if (id == act.RowId)
+					{
+						return true;
+					}
 				}
 				return false;
 			});
@@ -1826,14 +1967,14 @@ internal static class DataCenter
 			}
 
 			// Get the action sheet
-			Lumina.Excel.ExcelSheet<Action> actionSheet = Service.GetSheet<Action>();
+			var actionSheet = Service.GetSheet<Action>();
 			if (actionSheet == null)
 			{
 				return false; // Check if actionSheet is null
 			}
 
 			// Get the action being cast
-			Action action = actionSheet.GetRow(h.CastActionId);
+			var action = actionSheet.GetRow(h.CastActionId);
 			if (action.RowId == 0)
 			{
 				return false; // Check if action is not initialized
@@ -1900,24 +2041,36 @@ internal static class DataCenter
 		lock (_tankbusterLock)
 		{
 			TankbusterTargets.Clear();
-			if (!Player.Available || Player.Object == null) return false;
+			if (!Player.Available || Player.Object == null)
+			{
+				return false;
+			}
 
-			if (VfxDataQueue == null || VfxDataQueue.IsEmpty) return false;
+			if (VfxDataQueue == null || VfxDataQueue.IsEmpty)
+			{
+				return false;
+			}
 
-			bool found = false;
-			bool isTank = TargetFilter.PlayerJobCategory(JobRole.Tank);
+			var found = false;
+			var isTank = TargetFilter.PlayerJobCategory(JobRole.Tank);
 
 			foreach (var s in VfxDataQueue)
 			{
 				try
 				{
-					if (string.IsNullOrEmpty(s.Path)) continue;
+					if (string.IsNullOrEmpty(s.Path))
+					{
+						continue;
+					}
 
 					foreach (var p in TankbusterPaths)
 					{
-						if (!s.Path.StartsWith(p, PathCmp)) continue;
+						if (!s.Path.StartsWith(p, PathCmp))
+						{
+							continue;
+						}
 
-						bool isPlayerTarget = s.ObjectId == Player.Object.GameObjectId;
+						var isPlayerTarget = s.ObjectId == Player.Object.GameObjectId;
 
 						if (!isTank || isPlayerTarget)
 						{
@@ -1979,6 +2132,15 @@ internal static class DataCenter
 				}
 			}
 
+			// Regular spread markers
+			foreach (var p in SpreadDamagePaths)
+			{
+				if (s.Path.StartsWith(p, PathCmp))
+				{
+					return true;
+				}
+			}
+
 			return false;
 		});
 	}
@@ -1989,7 +2151,10 @@ internal static class DataCenter
 		{
 			foreach (var id in OtherConfiguration.HostileCastingTank)
 			{
-				if (id == act.RowId) return true;
+				if (id == act.RowId)
+				{
+					return true;
+				}
 			}
 			return h.CastTargetObjectId == h.TargetObjectId;
 		});
@@ -2001,7 +2166,10 @@ internal static class DataCenter
 		{
 			foreach (var id in OtherConfiguration.HostileCastingArea)
 			{
-				if (id == act.RowId) return true;
+				if (id == act.RowId)
+				{
+					return true;
+				}
 			}
 			return false;
 		});
@@ -2036,10 +2204,17 @@ internal static class DataCenter
 		return IsHostileCastingBase(h,
 			(act) =>
 			{
-				if (act.RowId == 0) return false;
+				if (act.RowId == 0)
+				{
+					return false;
+				}
+
 				foreach (var id in OtherConfiguration.HostileCastingKnockback)
 				{
-					if (id == act.RowId) return true;
+					if (id == act.RowId)
+					{
+						return true;
+					}
 				}
 				return false;
 			});
@@ -2084,8 +2259,8 @@ internal static class DataCenter
 			}
 
 			// Calculate the time since the cast started
-			float last = h.TotalCastTime - h.CurrentCastTime;
-			float t = last - DefaultGCDTotal;
+			var last = h.TotalCastTime - h.CurrentCastTime;
+			var t = last - DefaultGCDTotal;
 
 			// Check if the total cast time is greater than the minimum cast time and if the calculated time is within a valid range
 			if (!(h.TotalCastTime > DefaultGCDTotal && t > 0 && t < GCDTime(1)))
@@ -2094,7 +2269,7 @@ internal static class DataCenter
 			}
 
 			// Get the action sheet
-			Lumina.Excel.ExcelSheet<Action> actionSheet = Service.GetSheet<Action>();
+			var actionSheet = Service.GetSheet<Action>();
 			if (actionSheet == null)
 			{
 				PluginLog.Error("IsHostileCastingBase: Action sheet is null.");
@@ -2102,7 +2277,7 @@ internal static class DataCenter
 			}
 
 			// Get the action being cast
-			Action action = actionSheet.GetRow(h.CastActionId);
+			var action = actionSheet.GetRow(h.CastActionId);
 			if (action.RowId == 0)
 			{
 				PluginLog.Error("IsHostileCastingBase: Action is not initialized.");
@@ -2126,9 +2301,9 @@ internal static class DataCenter
 	{
 		get
 		{
-			string name = "BossModReborn";
-			IEnumerable<Dalamud.Plugin.IExposedPlugin> installedPlugins = Svc.PluginInterface.InstalledPlugins;
-			foreach (Dalamud.Plugin.IExposedPlugin x in installedPlugins)
+			var name = "BossModReborn";
+			var installedPlugins = Svc.PluginInterface.InstalledPlugins;
+			foreach (var x in installedPlugins)
 			{
 				if ((x.Name.Equals(name, StringComparison.OrdinalIgnoreCase) || x.InternalName.Equals(name, StringComparison.OrdinalIgnoreCase)) && x.IsLoaded)
 				{
@@ -2165,6 +2340,72 @@ internal static class DataCenter
 	public static bool BMRDebugHintsRwFunc { get; set; }
 	public static bool BMRDebugHintsTbFunc { get; set; }
 	public static string? BMRDebugTimelineWalk { get; set; }
+
+	/// <summary>
+	/// Delegate wired up by BossModUpdater to the <c>Hints.IsPositionSafe</c> IPC endpoint.
+	/// When null, BossModReborn is not available and all positions are considered safe.
+	/// </summary>
+	public static Func<Vector3, bool>? BMRIsPositionSafe { get; set; }
+
+	/// <summary>
+	/// Delegate wired up by BossModUpdater to the <c>Hints.IsDashSafe</c> IPC endpoint.
+	/// When null, BossModReborn is not available and all dashes are considered safe.
+	/// </summary>
+	public static Func<Vector3, Vector3, bool>? BMRIsDashSafe { get; set; }
+
+	/// <summary>
+	/// Delegate wired up by BossModUpdater to the <c>Hints.IsFixedDashSafe</c> IPC endpoint.
+	/// When null, BossModReborn is not available and all fixed dashes are considered safe.
+	/// </summary>
+	public static Func<Vector3, Vector3, bool>? BMRIsFixedDashSafe { get; set; }
+
+	/// <summary>
+	/// Returns true if the destination is safe to move to, or if BossModReborn IPC is unavailable.
+	/// </summary>
+	public static bool IsMovementDestinationSafe(Vector3 destination)
+	{
+		if (BMRIsPositionSafe == null)
+		{
+			return true;
+		}
+
+		try
+		{ return BMRIsPositionSafe(destination); }
+		catch { return true; }
+	}
+
+	/// <summary>
+	/// Returns true if the dash from <paramref name="from"/> to <paramref name="to"/> is safe,
+	/// or if BossModReborn IPC is unavailable.
+	/// </summary>
+	public static bool IsDashSafe(Vector3 from, Vector3 to)
+	{
+		if (BMRIsDashSafe == null)
+		{
+			return true;
+		}
+
+		try
+		{ return BMRIsDashSafe(from, to); }
+		catch { return true; }
+	}
+
+	/// <summary>
+	/// Returns true if a fixed-distance dash (game-determined destination) from <paramref name="from"/> to
+	/// <paramref name="to"/> is safe, or if BossModReborn IPC is unavailable.
+	/// For FixedDistanceMoveForward, FixedDistanceMoveBackward
+	/// </summary>
+	public static bool IsFixedDashSafe(Vector3 from, Vector3 to)
+	{
+		if (BMRIsFixedDashSafe == null)
+		{
+			return true;
+		}
+
+		try
+		{ return BMRIsFixedDashSafe(from, to); }
+		catch { return true; }
+	}
 	public static void ResetBmrData()
 	{
 		BMRHasActiveModule = false;
@@ -2191,6 +2432,9 @@ internal static class DataCenter
 		BMRDebugHintsRwFunc = false;
 		BMRDebugHintsTbFunc = false;
 		BMRDebugTimelineWalk = null;
+		BMRIsPositionSafe = null;
+		BMRIsDashSafe = null;
+		BMRIsFixedDashSafe = null;
 	}
 	#endregion
 }
