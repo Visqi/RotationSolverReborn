@@ -302,6 +302,14 @@ internal partial class Configs : IPluginConfiguration
 
 	#endregion
 
+	[ConditionBool, UI("Use BMR intergration to verify safety of movement actions/actions that cause movement for automatic usage. (Experimental)",
+	Filter = AutoActionUsage, Section = 5)]
+	private static readonly bool _bmrSafetyCheckAuto = false;
+
+	[ConditionBool, UI("Use BMR intergration to verify safety of movement actions/actions that cause movement for intercepted usage. (Experimental)",
+	Filter = AutoActionUsage, Section = 5)]
+	private static readonly bool _bmrSafetyCheckIntercept = false;
+
 	[ConditionBool, UI("Intercept player input and queue it for RSR to execute the action. (PvE only)",
 	Filter = AutoActionUsage, Section = 5)]
 	private static readonly bool _interceptAction3 = true;
@@ -1354,7 +1362,7 @@ internal partial class Configs : IPluginConfiguration
 		File.Copy(Svc.PluginInterface.ConfigFile.FullName, Svc.PluginInterface.ConfigFile.Directory + "\\RotationSolver_SafetySave.json", true);
 		File.Copy(Svc.PluginInterface.ConfigFile.Directory + "\\RotationSolver_Backup.json", Svc.PluginInterface.ConfigFile.FullName, true);
 
-		Configs restoredConfigs = JsonConvert.DeserializeObject<Configs>(
+		var restoredConfigs = JsonConvert.DeserializeObject<Configs>(
 									  File.ReadAllText(Svc.PluginInterface.ConfigFile.FullName))
 								  ?? new Configs();
 

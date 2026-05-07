@@ -70,7 +70,7 @@ public sealed class PLD_Reborn : PaladinRotation
 	protected override IAction? CountDownAction(float remainTime)
 	{
 		if (remainTime < HolySpiritPvE.Info.CastTime + CountDownAhead
-			&& HolySpiritPvE.CanUse(out IAction? act))
+			&& HolySpiritPvE.CanUse(out var act))
 		{
 			return act;
 		}
@@ -467,12 +467,14 @@ public sealed class PLD_Reborn : PaladinRotation
 	{
 		get
 		{
-			int aliveHealerCount = 0;
-			IEnumerable<IBattleChara> healers = PartyMembers.GetJobCategory(JobRole.Healer);
-			foreach (IBattleChara h in healers)
+			var aliveHealerCount = 0;
+			var healers = PartyMembers.GetJobCategory(JobRole.Healer);
+			foreach (var h in healers)
 			{
 				if (!h.IsDead)
+				{
 					aliveHealerCount++;
+				}
 			}
 
 			return base.CanHealSingleSpell && (GCDHeal || aliveHealerCount == 0);

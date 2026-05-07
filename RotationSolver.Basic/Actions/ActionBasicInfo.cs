@@ -70,7 +70,10 @@ public readonly struct ActionBasicInfo
 		{
 			var additional = _action.Setting.AdditionalAttackTypes;
 			if (additional == null || additional.Length == 0)
+			{
 				return [AttackType];
+			}
+
 			var result = new AttackType[1 + additional.Length];
 			result[0] = AttackType;
 			additional.CopyTo(result, 1);
@@ -85,10 +88,12 @@ public readonly struct ActionBasicInfo
 	public bool HasAttackType(AttackType attackType)
 	{
 		var attackTypes = AttackTypes;
-		for (int i = 0; i < attackTypes.Count; i++)
+		for (var i = 0; i < attackTypes.Count; i++)
 		{
 			if (attackTypes[i] == attackType)
+			{
 				return true;
+			}
 		}
 		return false;
 	}
@@ -110,7 +115,10 @@ public readonly struct ActionBasicInfo
 		{
 			var additional = _action.Setting.AdditionalAspects;
 			if (additional == null || additional.Length == 0)
+			{
 				return [Aspect];
+			}
+
 			var result = new Aspect[1 + additional.Length];
 			result[0] = Aspect;
 			additional.CopyTo(result, 1);
@@ -125,10 +133,12 @@ public readonly struct ActionBasicInfo
 	public bool HasAspect(Aspect aspect)
 	{
 		var aspects = Aspects;
-		for (int i = 0; i < aspects.Count; i++)
+		for (var i = 0; i < aspects.Count; i++)
 		{
 			if (aspects[i] == aspect)
+			{
 				return true;
+			}
 		}
 		return false;
 	}
@@ -266,13 +276,13 @@ public readonly struct ActionBasicInfo
 	{
 		get
 		{
-			uint? mpOver = _action.Setting.MPOverride?.Invoke();
+			var mpOver = _action.Setting.MPOverride?.Invoke();
 			if (mpOver.HasValue)
 			{
 				return mpOver.Value;
 			}
 
-			uint mp = (uint)ActionManager.GetActionCost(ActionType.Action, AdjustedID, 0, 0, 0, 0);
+			var mp = (uint)ActionManager.GetActionCost(ActionType.Action, AdjustedID, 0, 0, 0, 0);
 			return mp < 100 ? 0 : mp;
 		}
 	}
@@ -299,7 +309,9 @@ public readonly struct ActionBasicInfo
 				foreach (var slotId in DataCenter.BluSlots)
 				{
 					if (slotId == _action.Setting.RequiredBluSlotActionId)
+					{
 						return true;
+					}
 				}
 				return false;
 			}
@@ -309,7 +321,9 @@ public readonly struct ActionBasicInfo
 				foreach (var slotId in DataCenter.BluSlots)
 				{
 					if (slotId == ID)
+					{
 						return true;
+					}
 				}
 				return false;
 			}
@@ -319,7 +333,9 @@ public readonly struct ActionBasicInfo
 				foreach (var actionId in DataCenter.DutyActions)
 				{
 					if (actionId == ID)
+					{
 						return true;
+					}
 				}
 				return false;
 			}
@@ -478,7 +494,7 @@ public readonly struct ActionBasicInfo
 			if (IsRealGCD)
 			{
 				var status = ActionManager.Instance()->GetActionStatus(ActionType.Action, AdjustedID);
-				bool statusFound = false;
+				var statusFound = false;
 				foreach (var badStatus in ConfigurationHelper.BadStatusGCD)
 				{
 					if (badStatus == status)
@@ -496,7 +512,7 @@ public readonly struct ActionBasicInfo
 			if (IsAbility && !IsRealGCD)
 			{
 				var status = ActionManager.Instance()->GetActionStatus(ActionType.EventAction, AdjustedID);
-				bool statusFound = false;
+				var statusFound = false;
 				foreach (var badStatus in ConfigurationHelper.BadStatusAbility)
 				{
 					if (badStatus == status)
@@ -549,21 +565,29 @@ public readonly struct ActionBasicInfo
 
 		// Must have a cast time
 		if (CastTime <= 0f)
+		{
 			return false;
+		}
 
 		// Must not have a instant cast status
 		if (!Player.Object.WillStatusEnd(0, true, StatusHelper.SwiftcastStatus))
+		{
 			return false;
+		}
 
 		// Must not be in the no-cast list
 		if (Array.IndexOf(ActionsNoNeedCasting, ID) >= 0)
+		{
 			return false;
+		}
 
 		// Must be in a state where casting is not possible
 		if (DataCenter.SpecialType == SpecialCommandType.NoCasting ||
 			(DateTime.Now > DataCenter.KnockbackStart && DateTime.Now < DataCenter.KnockbackFinished) ||
 			(DataCenter.NoPoslock && DataCenter.IsMoving && !skipCastingCheck))
+		{
 			return true;
+		}
 
 		return false;
 	}
@@ -690,7 +714,7 @@ public readonly struct ActionBasicInfo
 
 		if (comboActions.Length > 0)
 		{
-			bool foundCombo = false;
+			var foundCombo = false;
 			foreach (var comboAction in comboActions)
 			{
 				if (comboAction == DataCenter.LastComboAction)

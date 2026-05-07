@@ -12,7 +12,6 @@ using RotationSolver.ActionTimeline;
 using RotationSolver.Basic.Configuration;
 using RotationSolver.Commands;
 using RotationSolver.Data;
-using RotationSolver.Helpers;
 using RotationSolver.IPC;
 //using KamiToolKit;
 using RotationSolver.UI;
@@ -115,10 +114,10 @@ public sealed class RotationSolverPlugin : IAsyncDalamudPlugin
 		{
 			if (File.Exists(Svc.PluginInterface.ConfigFile.FullName))
 			{
-				string json = await File.ReadAllTextAsync(Svc.PluginInterface.ConfigFile.FullName, cancellationToken);
-				Configs oldConfigs = JsonConvert.DeserializeObject<Configs>(json) ?? new Configs();
+				var json = await File.ReadAllTextAsync(Svc.PluginInterface.ConfigFile.FullName, cancellationToken);
+				var oldConfigs = JsonConvert.DeserializeObject<Configs>(json) ?? new Configs();
 
-				Configs newConfigs = Configs.Migrate(oldConfigs);
+				var newConfigs = Configs.Migrate(oldConfigs);
 				if (newConfigs.Version != Configs.CurrentVersion)
 				{
 					newConfigs = new Configs();
@@ -136,11 +135,8 @@ public sealed class RotationSolverPlugin : IAsyncDalamudPlugin
 			Service.Config = new Configs();
 		}
 
-		// Load OtherConfiguration files and download incompatible plugin list concurrently
-		await Task.WhenAll(
-			OtherConfiguration.InitAsync(cancellationToken),
-			DownloadHelper.DownloadAsync(cancellationToken)
-		);
+		// Load OtherConfiguration files
+		await OtherConfiguration.InitAsync(cancellationToken);
 
 		// The following must run on the main/framework thread
 		await Svc.Framework.Run(() =>
@@ -182,7 +178,7 @@ public sealed class RotationSolverPlugin : IAsyncDalamudPlugin
 
 	private static void DutyState_DutyCompleted(IDutyStateEventArgs e)
 	{
-		TimeSpan delay = TimeSpan.FromSeconds(_random.Next(4, 6));
+		var delay = TimeSpan.FromSeconds(_random.Next(4, 6));
 		_ = Svc.Framework.RunOnTick(() =>
 		{
 			_ = Service.Config.DutyEnd.AddMacro();
@@ -204,7 +200,7 @@ public sealed class RotationSolverPlugin : IAsyncDalamudPlugin
 			return;
 		}
 
-		TerritoryType territory = Service.GetSheet<TerritoryType>().GetRow(id);
+		var territory = Service.GetSheet<TerritoryType>().GetRow(id);
 		DataCenter.Territory = new TerritoryInfo(territory);
 
 		try
@@ -231,7 +227,7 @@ public sealed class RotationSolverPlugin : IAsyncDalamudPlugin
 
 		if (DataCenter.Territory?.IsHighEndDuty ?? false)
 		{
-			string warning = string.Format(UiString.HighEndWarning.GetDescription(), DataCenter.Territory.ContentFinderName);
+			var warning = string.Format(UiString.HighEndWarning.GetDescription(), DataCenter.Territory.ContentFinderName);
 			BasicWarningHelper.AddSystemWarning(warning);
 		}
 	}
@@ -306,7 +302,7 @@ public sealed class RotationSolverPlugin : IAsyncDalamudPlugin
 
 	internal static void UpdateDisplayWindow()
 	{
-		bool isValid = MajorUpdater.IsValid && DataCenter.CurrentRotation != null;
+		var isValid = MajorUpdater.IsValid && DataCenter.CurrentRotation != null;
 
 		isValid &= !Service.Config.OnlyShowWithHostileOrInDuty
 				|| Svc.Condition[ConditionFlag.BoundByDuty]
@@ -327,7 +323,7 @@ public sealed class RotationSolverPlugin : IAsyncDalamudPlugin
 		_interceptedActionWindow!.IsOpen = isValid && Service.Config.ShowInterceptedActionWindow;
 
 		// ActionTimeline window with additional checks
-		bool showActionTimeline = isValid && Service.Config.ShowActionTimelineWindow;
+		var showActionTimeline = isValid && Service.Config.ShowActionTimelineWindow;
 
 		if (Service.Config.ActionTimelineOnlyWhenActive)
 		{
@@ -351,7 +347,7 @@ public sealed class RotationSolverPlugin : IAsyncDalamudPlugin
 
 	private static bool AnyHostileTargetWithinDistance(float distance)
 	{
-		foreach (IBattleChara target in DataCenter.AllHostileTargets)
+		foreach (var target in DataCenter.AllHostileTargets)
 		{
 			if (target.DistanceToPlayer() < distance)
 			{
@@ -375,7 +371,7 @@ public sealed class RotationSolverPlugin : IAsyncDalamudPlugin
 		Svc.PluginInterface.UiBuilder.OpenConfigUi -= OnOpenConfigUi;
 		Svc.PluginInterface.UiBuilder.Draw -= OnDraw;
 
-		foreach (IDisposable item in _dis)
+		foreach (var item in _dis)
 		{
 			item.Dispose();
 		}

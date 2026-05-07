@@ -333,7 +333,7 @@ internal class OtherConfiguration
 
 	private static string GetFilePath(string name)
 	{
-		string directory = Svc.PluginInterface.ConfigDirectory.FullName;
+		var directory = Svc.PluginInterface.ConfigDirectory.FullName;
 
 		return directory + $"\\{name}.json";
 	}
@@ -345,10 +345,10 @@ internal class OtherConfiguration
 
 	private static void SavePath<T>(T value, string path)
 	{
-		int retryCount = 3;
-		int delay = 1000; // 1 second delay
+		var retryCount = 3;
+		var delay = 1000; // 1 second delay
 
-		for (int i = 0; i < retryCount; i++)
+		for (var i = 0; i < retryCount; i++)
 		{
 			try
 			{
@@ -374,7 +374,7 @@ internal class OtherConfiguration
 
 	private static void InitOne<T>(ref T value, string name, bool download = true, bool forceDownload = false) where T : new()
 	{
-		string path = GetFilePath(name);
+		var path = GetFilePath(name);
 		PluginLog.Information($"Initializing {name} from {path}");
 
 		if (File.Exists(path) && !forceDownload)
@@ -398,8 +398,8 @@ internal class OtherConfiguration
 		{
 			try
 			{
-				string url = $"https://raw.githubusercontent.com/{Service.USERNAME}/{Service.REPO}/main/Resources/{name}.json";
-				string str = Http.GetStringAsync(url).Result;
+				var url = $"https://raw.githubusercontent.com/{Service.USERNAME}/{Service.REPO}/main/Resources/{name}.json";
+				var str = Http.GetStringAsync(url).Result;
 
 				File.WriteAllText(path, str);
 				value = JsonConvert.DeserializeObject<T>(str, new JsonSerializerSettings
