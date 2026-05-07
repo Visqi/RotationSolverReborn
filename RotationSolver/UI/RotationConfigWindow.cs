@@ -1024,11 +1024,7 @@ public partial class RotationConfigWindow : Window
 				ImGui.Spacing();
 			}
 			//
-			if (_crashPlugins.Count > 0 && _crashPlugins[0].Name != null)
-			{
-				errorText = $"Disable {_crashPlugins[0].Name}, can cause conflicts/crashes.";
-			}
-			else if (Player.Available && (Player.Job == Job.CRP || Player.Job == Job.BSM || Player.Job == Job.ARM || Player.Job == Job.GSM ||
+			if (Player.Available && (Player.Job == Job.CRP || Player.Job == Job.BSM || Player.Job == Job.ARM || Player.Job == Job.GSM ||
 					Player.Job == Job.LTW || Player.Job == Job.WVR || Player.Job == Job.ALC || Player.Job == Job.CUL ||
 					Player.Job == Job.MIN || Player.Job == Job.FSH || Player.Job == Job.BTN))
 			{
@@ -1047,12 +1043,26 @@ public partial class RotationConfigWindow : Window
 					// Calculate the required height for the button
 					var textSize = ImGui.CalcTextSize(warning, false, availableWidth);
 					var buttonHeight = textSize.Y + (ImGui.GetStyle().FramePadding.Y * 2);
-					var lineHeight = ImGui.GetTextLineHeight();
-					var lineCount = (int)Math.Ceiling(textSize.X / availableWidth);
 
-					if (ImGui.Button(warning, new Vector2(availableWidth, buttonHeight)))
+					// Make the warning clickable to navigate to Compatibility
+					if (ImGui.Selectable(warning, false, ImGuiSelectableFlags.None, new Vector2(availableWidth, buttonHeight)))
 					{
-						warningsToRemove.Add(warning);
+						_activeTab = RotationConfigWindowTab.About;
+						_aboutHeaders.OpenHeaderByTitle(UiString.ConfigWindow_About_Compatibility.GetDescription());
+						_searchResults = [];
+					}
+
+					// Change cursor to hand when hovering
+					if (ImGui.IsItemHovered())
+					{
+						ImGui.SetMouseCursor(ImGuiMouseCursor.Hand);
+						ImguiTooltips.ShowTooltip("Click to view plugin compatibility information. Right-click to dismiss warning.");
+
+						// Right-click to remove the warning
+						if (ImGui.IsMouseReleased(ImGuiMouseButton.Right))
+						{
+							warningsToRemove.Add(warning);
+						}
 					}
 
 					ImGui.PopTextWrapPos(); // Reset text wrapping position
