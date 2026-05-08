@@ -1266,7 +1266,7 @@ public partial class CustomRotation
 	/// <summary>
 	/// Checks if there is enough remaining time in the current GCD to execute an off-global action without clipping.
 	/// </summary>
-	public static bool EnoughWeaveTime => WeaponRemain > Math.Max(DataCenter.CalculatedActionAhead, AnimationLock) && WeaponRemain < WeaponTotal;
+	public static bool EnoughWeaveTime => WeaponRemain < WeaponTotal && WeaponRemain > Math.Max(DataCenter.CalculatedActionAhead, AnimationLock);
 
 	/// <summary>
 	/// Indicates whether the player can currently execute a late weave.
@@ -1281,7 +1281,7 @@ public partial class CustomRotation
 	/// <summary>
 	/// Safely verifies that the player is in the middle of a GCD and has enough time to weave an oGCD.
 	/// </summary>
-	public static bool CanWeave => EnoughWeaveTime && DataCenter.DefaultGCDElapsed > 0;
+	public static bool CanWeave => EnoughWeaveTime && AnimationLock <= 0f;
 
 	/// <summary>
 	/// Counts how many party members (alive and not full HP) are within range of the pet.

@@ -313,14 +313,12 @@ public sealed class ChurinBRD : BardRotation
 			 if (HeartbreakShotPvE.CanUse(out act)) return act;
 		}
 
-		if (!Is369
-		    || !EnablePrepullHeartbreakShot
-		    || !(remainTime < 1.65f))
+		if (Is369 && EnablePrepullHeartbreakShot && remainTime < 1.65f && HeartbreakShotPvE.CanUse(out act))
 		{
-			return base.CountDownAction(remainTime);
+			return act;
 		}
 
-		return HeartbreakShotPvE.CanUse(out act) ? act : base.CountDownAction(remainTime);
+		return  remainTime <= 0.1f && TryUseDoTs(out act) ? act : base.CountDownAction(remainTime);
 	}
 
 	#endregion
@@ -595,15 +593,14 @@ public sealed class ChurinBRD : BardRotation
 			if (!EmpyrealArrowPvE.Cooldown.IsCoolingDown
 			    || EmpyrealArrowPvE.Cooldown.HasOneCharge)
 			{
-				return CanWeave;
+				return CanWeave && WeaponRemain > DataCenter.CalculatedActionAhead + AnimationLock;
 			}
 
 			var recast = EmpyrealArrowPvE.Cooldown.RecastTimeRemain;
 			var wTLessR = Math.Abs(recast - WeaponTotal);
 
-			if (recast >= WeaponTotal) return false;
-
-			return wTLessR < WeaponRemain && WeaponRemain > DataCenter.CalculatedActionAhead && CanWeave;
+			return recast < WeaponTotal
+			       || wTLessR < WeaponRemain;
 		}
 	}
 
@@ -637,11 +634,16 @@ public sealed class ChurinBRD : BardRotation
 	private bool TryUseEmpyrealArrow(out IAction? act)
 	{
 		act = null;
-		if (IsInSandbagMode || !CanUseEmpyrealArrow) return false;
+		if (IsInSandbagMode) return false;
 
 		if (NoSong) return false;
 
-		return EmpyrealArrowTimingCheck && EmpyrealArrowPvE.CanUse(out act);
+		if (EmpyrealArrowPvE.CanUse(out act))
+		{
+			return EmpyrealArrowTimingCheck && CanUseEmpyrealArrow;
+		}
+
+		return false;
 	}
 
 	#endregion
@@ -873,7 +875,7 @@ public sealed class ChurinBRD : BardRotation
 	private bool TryUseHeartBreakShot(out IAction? act)
 	{
 		act = null;
-		if (IsInSandbagMode || !CanWeave) return false;
+		if (IsInSandbagMode || !CanWeave || !EnoughWeaveTime) return false;
 
 		var willHaveMaxCharges = HeartbreakShotPvE.Cooldown.WillHaveXCharges(BloodletterMax, 5);
 		var willHaveOneCharge  = HeartbreakShotPvE.Cooldown.WillHaveOneCharge(5);
