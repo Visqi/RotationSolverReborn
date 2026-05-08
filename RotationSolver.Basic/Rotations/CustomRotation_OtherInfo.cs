@@ -1266,7 +1266,7 @@ public partial class CustomRotation
 	/// <summary>
 	/// Checks if there is enough remaining time in the current GCD to execute an off-global action without clipping.
 	/// </summary>
-	public static bool EnoughWeaveTime => WeaponRemain > DataCenter.CalculatedActionAhead + Math.Max(AnimationLock, 0.6f) && WeaponRemain < WeaponTotal;
+	public static bool EnoughWeaveTime => WeaponRemain > Math.Max(DataCenter.CalculatedActionAhead, AnimationLock) && WeaponRemain < WeaponTotal;
 
 	/// <summary>
 	/// Indicates whether the player can currently execute a late weave.
