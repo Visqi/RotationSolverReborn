@@ -43,7 +43,7 @@ internal class Service : IDisposable
 	/// <summary>
 	/// Gets or sets a value indicating whether the player can move.
 	/// </summary>
-	internal static unsafe bool CanMove
+	internal static bool CanMove
 	{
 		get => ForceDisableMovement == 0;
 		set

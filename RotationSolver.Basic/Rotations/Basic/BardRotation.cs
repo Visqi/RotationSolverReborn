@@ -483,7 +483,7 @@ public partial class BardRotation
 
 	static partial void ModifyRepellingShotPvP(ref ActionSetting setting)
 	{
-		setting.SpecialType = SpecialActionType.FixedDistanceMoveBackward;
+		setting.SpecialType = SpecialActionType.HostileMovingAttack;
 	}
 
 	static partial void ModifyEncoreOfLightPvP(ref ActionSetting setting)
