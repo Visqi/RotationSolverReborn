@@ -449,12 +449,16 @@ public partial class BardRotation
 	// PvP
 	static partial void ModifyPowerfulShotPvP(ref ActionSetting setting)
 	{
-
+		setting.ActionCheck = () => !StatusHelper.PlayerHasStatus(true, StatusID.Repertoire);
 	}
 
 	static partial void ModifyPitchPerfectPvP(ref ActionSetting setting)
 	{
 		setting.StatusNeed = [StatusID.Repertoire];
+		setting.CreateConfig = () => new ActionConfig()
+		{
+			AoeCount = 1,
+		};
 	}
 
 	static partial void ModifyApexArrowPvP(ref ActionSetting setting)
