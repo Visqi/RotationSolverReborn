@@ -522,7 +522,12 @@ internal static class StateUpdater
 
 	private static bool ShouldAddAntiKnockback()
 	{
-		if (DataCenter.InCombat && DataCenter.IsInWindurst && (StatusHelper.PlayerHasStatus(false, StatusID.WesterlyWinds) || StatusHelper.PlayerHasStatus(false, StatusID.EasterlyWinds)))
+		if (DataCenter.InCombat && DataCenter.IsInWindurst && StatusHelper.PlayerHasStatus(false, StatusID.WesterlyWinds) && StatusHelper.PlayerWillStatusEndGCD(2, 0, false, StatusID.WesterlyWinds))
+		{
+			return true;
+		}
+
+		if (DataCenter.InCombat && DataCenter.IsInWindurst && StatusHelper.PlayerHasStatus(false, StatusID.EasterlyWinds) && StatusHelper.PlayerWillStatusEndGCD(2, 0, false, StatusID.EasterlyWinds))
 		{
 			return true;
 		}
