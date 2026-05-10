@@ -34,17 +34,17 @@ public partial class CustomRotation
 			return null;
 		}
 
-		//if (DataCenter.Job == ECommons.ExcelServices.Job.PLD && IsLastAction(ActionID.PassageOfArmsPvE) && StatusHelper.PlayerHasStatus(true, StatusID.PassageOfArms))
-		//{
-		//	return null;
-		//}
+		if (Service.Config.PldlockCasting && DataCenter.Job == ECommons.ExcelServices.Job.PLD && IsLastAction(ActionID.PassageOfArmsPvE) && StatusHelper.PlayerHasStatus(true, StatusID.PassageOfArms))
+		{
+			return null;
+		}
 
-		//if (DataCenter.Job == ECommons.ExcelServices.Job.AST && IsLastAction(ActionID.CollectiveUnconsciousPvE) && StatusHelper.PlayerHasStatus(true, StatusID.CollectiveUnconscious_848))
-		//{
-		//	return null;
-		//}
+		if (Service.Config.AstlockCasting && DataCenter.Job == ECommons.ExcelServices.Job.AST && IsLastAction(ActionID.CollectiveUnconsciousPvE) && StatusHelper.PlayerHasStatus(true, StatusID.CollectiveUnconscious_848))
+		{
+			return null;
+		}
 
-		if (DataCenter.Job == ECommons.ExcelServices.Job.BLU && IsLastAction(ActionID.PhantomFlurryPvE) && StatusHelper.PlayerHasStatus(true, StatusID.PhantomFlurry))
+		if (Service.Config.BlulockCasting && DataCenter.Job == ECommons.ExcelServices.Job.BLU && IsLastAction(ActionID.PhantomFlurryPvE) && StatusHelper.PlayerHasStatus(true, StatusID.PhantomFlurry))
 		{
 			return null;
 		}

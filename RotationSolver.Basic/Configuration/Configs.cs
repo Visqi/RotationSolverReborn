@@ -418,6 +418,18 @@ internal partial class Configs : IPluginConfiguration
 	[UI("", Action = ActionID.ImprovisationPvE, Parent = nameof(PoslockCasting))]
 	public bool PosImprovisation { get; set; } = false;
 
+	[ConditionBool, UI("Lock actions when casting Passage Of Arms during AOE mitigations.",
+	Filter = Extra)]
+	private static readonly bool _pldlockCasting = false;
+
+	[ConditionBool, UI("Lock actions when casting Collective Unconscious during AOE mitigations.",
+	Filter = Extra)]
+	private static readonly bool _astlockCasting = false;
+
+	[ConditionBool, UI("Lock actions when casting Phantom Flurry.",
+	Filter = Extra)]
+	private static readonly bool _blulockCasting = true;
+
 	/// <markdown file="Auto" name="Gemdraughts/Tinctures/Pots Usage" section="Action Usage and Control">
 	/// Sets whether to use damage-boosting potions and in which duty. You also need to enable the specific
 	/// potion in the `Actions` tab, under `Items`.
