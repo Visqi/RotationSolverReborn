@@ -328,6 +328,7 @@ public sealed class ChurinBRD : BardRotation
 
 	protected override bool EmergencyAbility(IAction nextGCD, out IAction? act)
 	{
+		act = null;
 		if (ChurinPotions.ShouldUsePotion(this, out act)) return true;
 
 		if (IsFirstCycle && InArmys && !RadiantFinalePvE.Cooldown.IsCoolingDown) IsFirstCycle = false;
@@ -591,17 +592,21 @@ public sealed class ChurinBRD : BardRotation
 	{
 		get
 		{
+			if (WeaponRemain <= DataCenter.CalculatedActionAhead + Math.Max(AnimationLock, 0.6f)) return false;
+
 			if (!EmpyrealArrowPvE.Cooldown.IsCoolingDown
 			    || EmpyrealArrowPvE.Cooldown.HasOneCharge)
 			{
-				return CanWeave && WeaponRemain > DataCenter.CalculatedActionAhead + AnimationLock;
+				return CanWeave;
 			}
 
 			var recast = EmpyrealArrowPvE.Cooldown.RecastTimeRemain;
-			var wTLessR = Math.Abs(recast - WeaponTotal);
 
-			return recast < WeaponTotal
-			       || wTLessR < WeaponRemain;
+			if (recast >= WeaponTotal) return false;
+
+			if (recast >= WeaponRemain) return false;
+
+			return CanWeave && EmpyrealArrowPvE.Cooldown.HasOneCharge;
 		}
 	}
 
@@ -639,9 +644,9 @@ public sealed class ChurinBRD : BardRotation
 
 		if (NoSong) return false;
 
-		if (EmpyrealArrowPvE.CanUse(out act))
+		if (EmpyrealArrowTimingCheck && CanUseEmpyrealArrow)
 		{
-			return EmpyrealArrowTimingCheck && CanUseEmpyrealArrow;
+			return EmpyrealArrowPvE.CanUse(out act);
 		}
 
 		return false;
@@ -888,7 +893,7 @@ public sealed class ChurinBRD : BardRotation
 			&& BloodletterPvE.Cooldown.CurrentCharges < 3
 			&& !willHaveMaxCharges;
 		var holdForBurstTiming = InBurst
-			&& (!willHaveOneCharge || IsLastAbility(ActionID.BloodletterPvE, ActionID.RainOfDeathPvE, ActionID.HeartbreakShotPvE));
+			&& (!willHaveOneCharge || !CanWeave);
 		var isInWanderersHold  = InWanderers && (holdForRagingOrCap || holdForBurstTiming);
 
 		var isInArmysHold = InArmys
@@ -899,14 +904,14 @@ public sealed class ChurinBRD : BardRotation
 		var isInMagesHold = InMages && SongEndAfter(MageRemainTime + WeaponTotal * 0.9f);
 
 		var isEmpyrealBlocking = !NoSong && !InBurst
-			&& (EmpyrealArrowPvE.Cooldown.WillHaveOneCharge(WeaponTotal)
+			&& (EmpyrealArrowPvE.Cooldown.WillHaveOneCharge(WeaponTotal) && CanUseEmpyrealArrow
 			    || wontHaveCharge);
 
 		if (isInWanderersHold || isInArmysHold || isInMagesHold || isEmpyrealBlocking) return false;
 
 		if (SongTimings == SongTiming.Cycle369 && NoSong && HeartbreakShotPvE.CanUse(out act, usedUp: false)) return true;
 
-		if (!EnoughWeaveTime) return false;
+		if (!CanWeave) return false;
 
 		var shouldUseUsedUp = InBurst || IsMedicated
 			|| (willHaveOneCharge && (InMages || (InArmys && SongTime > 30f)));
@@ -945,7 +950,7 @@ public sealed class ChurinBRD : BardRotation
 		if (Repertoire == 3) return true;
 		if (Repertoire == 2 && EmpyrealArrowPvE.Cooldown.WillHaveOneChargeGCD(1)) return true;
 
-		return SongEndAfter(WandRemainTime - WeaponTotal * 0.25f) && CanEarlyWeave;
+		return SongEndAfter(WandRemainTime - DataCenter.CalculatedActionAhead + AnimationLock) && WeaponRemain > LateWeaveWindow;
 	}
 
 	#endregion
