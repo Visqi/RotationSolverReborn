@@ -4,6 +4,8 @@ namespace RotationSolver.ExtraRotations.Healer;
 
 [Rotation("BeirutaSGE", CombatType.PvE, GameVersion = "7.45", Description = "Semi-Automatic Savage/Ultimate rotation, need to used with CD planner or manual inputs")]
 [SourceCode(Path = "main/ExtraRotations/Healer/BeirutaSGE.cs")]
+[ExtraRotation]
+
 public sealed class BeirutaSGE : SageRotation
 {
 	#region Config Options
