@@ -285,6 +285,7 @@ public partial class AstrologianRotation
 			}
 			return true;
 		};
+		setting.IsFriendly = true;
 	}
 
 	static partial void ModifyUmbralDrawPvE(ref ActionSetting setting)
@@ -305,6 +306,7 @@ public partial class AstrologianRotation
 			}
 			return true;
 		};
+		setting.IsFriendly = true;
 	}
 
 	static partial void ModifyPlayIPvE(ref ActionSetting setting) //37019

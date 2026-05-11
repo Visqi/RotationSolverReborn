@@ -6,6 +6,7 @@ namespace RotationSolver.ExtraRotations.Ranged;
 	Description = "I sing the body electric. I gasp the body organic. I miss the body remembered.")]
 [SourceCode(Path = "main/ExtraRotations/Ranged/ChurinBRD.cs")]
 [ExtraRotation]
+
 public sealed class ChurinBRD : BardRotation
 {
 	#region Properties
