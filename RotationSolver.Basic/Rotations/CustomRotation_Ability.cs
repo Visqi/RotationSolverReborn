@@ -1,4 +1,5 @@
 using ECommons.DalamudServices;
+using ECommons.ExcelServices;
 
 namespace RotationSolver.Basic.Rotations;
 
@@ -595,7 +596,7 @@ public partial class CustomRotation
 		#region PvP
 		if (DataCenter.IsPvP)
 		{
-			if (PurifyPvP.CanUse(out act))
+			if (DataCenter.Job != Job.BRD && DataCenter.Job !=Job.WHM &&PurifyPvP.CanUse(out act))
 			{
 				if (Service.Config.PvpPurifyStun && StatusHelper.PlayerHasStatus(false, StatusID.Stun_1343))
 				{

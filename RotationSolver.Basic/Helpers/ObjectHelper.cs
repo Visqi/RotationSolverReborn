@@ -2672,15 +2672,11 @@ public static class ObjectHelper
 	{
 		if (Service.Config.ForkedtowerDeadStar && DataCenter.IsInForkedTower)
 		{
-			var Triton = battleChara.NameId == 13730;
-			var Nereid = battleChara.NameId == 13731;
-			var Phobos = battleChara.NameId == 13732;
-
 			var PhobosicGravity = StatusHelper.PlayerHasStatus(false, StatusID.PhobosicGravity);
 			var TritonicGravity = StatusHelper.PlayerHasStatus(false, StatusID.TritonicGravity);
 			var NereidicGravity = StatusHelper.PlayerHasStatus(false, StatusID.NereidicGravity);
 
-			if (Triton && (NereidicGravity || PhobosicGravity))
+			if (battleChara.NameId == (uint)NPCName.Triton && (NereidicGravity || PhobosicGravity))
 			{
 				if (Service.Config.InDebug)
 				{
@@ -2689,7 +2685,7 @@ public static class ObjectHelper
 				return true;
 			}
 
-			if (Nereid && (TritonicGravity || PhobosicGravity))
+			if (battleChara.NameId == (uint)NPCName.Nereid && (TritonicGravity || PhobosicGravity))
 			{
 				if (Service.Config.InDebug)
 				{
@@ -2698,7 +2694,7 @@ public static class ObjectHelper
 				return true;
 			}
 
-			if (Phobos && (TritonicGravity || NereidicGravity))
+			if (battleChara.NameId == (uint)NPCName.Phobos && (TritonicGravity || NereidicGravity))
 			{
 				if (Service.Config.InDebug)
 				{
