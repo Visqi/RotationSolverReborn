@@ -4605,6 +4605,9 @@ public partial class RotationConfigWindow : Window
 			ImGui.Text($"Fate ID: {DataCenter.PlayerFateId}");
 		}
 		ImGui.Spacing();
+		ImGui.Text($"In Field Operations: {DataCenter.IsInFieldOperations}");
+		ImGui.Text($"In Field Raid: {DataCenter.IsInFieldRaid}");
+		ImGui.Spacing();
 		ImGui.Text($"IsInBozjanFieldOp: {DataCenter.IsInBozjanFieldOp}");
 		ImGui.Text($"IsInBozjanFieldOpCE: {DataCenter.IsInBozjanFieldOpCE}");
 		ImGui.Text($"IsInDelubrumNormal: {DataCenter.IsInDelubrumNormal}");
@@ -4766,6 +4769,20 @@ public partial class RotationConfigWindow : Window
 			ImGui.Text($"Event Type: {battleChara.GetEventType()}");
 			ImGui.Text($"TargetCharaCondition: {battleChara.TargetCharaCondition()}");
 			//ImGui.Text($"GetMarkerNumber: {MarkingHelper.GetMarkerNumber((long)battleChara.GameObjectId)}");
+			var npcName = string.Empty;
+			var npcEnumName = string.Empty;
+			if (battleChara.NameId != 0)
+			{
+				var bnpcName = Service.GetSheet<Lumina.Excel.Sheets.BNpcName>().GetRow(battleChara.NameId);
+				npcName = bnpcName.Singular.ToString();
+
+				// Try to match to NPCName enum
+				if (Enum.IsDefined(typeof(NPCName), battleChara.NameId))
+				{
+					npcEnumName = $"{Enum.GetName(typeof(NPCName), battleChara.NameId)}";
+				}
+			}
+			ImGui.Text($"NPC Name: {npcEnumName}");
 			ImGui.Text($"Name Id: {battleChara.NameId}");
 			ImGui.Text($"Data Id: {battleChara.BaseId}");
 			ImGui.Spacing();

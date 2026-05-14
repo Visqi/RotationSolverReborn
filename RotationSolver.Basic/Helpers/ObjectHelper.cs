@@ -13,6 +13,7 @@ using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Common.Component.BGCollision;
 using Lumina.Excel.Sheets;
 using RotationSolver.Basic.Configuration;
+using RotationSolver.Basic.Data;
 using System.Collections.Concurrent;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -151,6 +152,17 @@ public static class ObjectHelper
 		{
 			return false;
 		}
+	}
+
+	/// <summary>
+	/// Checks if the battle character has the specified NPC name.
+	/// </summary>
+	/// <param name="battleChara">The battle character to check.</param>
+	/// <param name="npcName">The NPC name to compare against.</param>
+	/// <returns>True if the battle character's NameId matches the specified NPC name; otherwise, false.</returns>
+	public static bool IsNamed(this IBattleChara battleChara, NPCName npcName)
+	{
+		return battleChara != null && battleChara.NameId == (uint)npcName;
 	}
 
 	internal static bool IsOthersPlayersMob(this IBattleChara battleChara)
@@ -363,7 +375,7 @@ public static class ObjectHelper
 		}
 
 		//Special cases for Black Star and Mythic Idol, which do not have valid target objects but are still attackable.
-		if (battleChara.NameId == 13726 || battleChara.NameId == 13636)
+		if (battleChara.IsNamed(NPCName.BlackStar) || battleChara.IsNamed(NPCName.MythicIdol))
 		{
 			return true;
 		}
@@ -505,9 +517,9 @@ public static class ObjectHelper
 			return false;
 		}
 
-		if (battleChara.NameId == 9441)
+		if (battleChara.IsNamed(NPCName.CastrumGate))
 		{
-			return true; // Special case for Bottom gate in CLL
+			return true;
 		}
 
 		return false;
@@ -1364,7 +1376,7 @@ public static class ObjectHelper
 		{
 			if (DataCenter.IsInTheLostCanalsofUznair)
 			{
-				if (battleChara.NameId == (uint)NPCName.NamazuStickywhisker)
+				if (battleChara.IsNamed(NPCName.NamazuStickywhisker))
 				{
 					return true;
 				}
@@ -1372,12 +1384,12 @@ public static class ObjectHelper
 
 			if (DataCenter.IsInTheShiftingAltarsofUznair)
 			{
-				if (battleChara.NameId == (uint)NPCName.GoldWhisker)
+				if (battleChara.IsNamed(NPCName.GoldWhisker))
 				{
 					return true;
 				}
 
-				if (battleChara.NameId == (uint)NPCName.GoldWhisker_7625)
+				if (battleChara.IsNamed(NPCName.GoldWhisker_7625))
 				{
 					return true;
 				}
@@ -1385,12 +1397,12 @@ public static class ObjectHelper
 
 			if (DataCenter.IsInTheHiddenCanalsofUznair)
 			{
-				if (battleChara.NameId == (uint)NPCName.NamazuStickywhisker)
+				if (battleChara.IsNamed(NPCName.NamazuStickywhisker))
 				{
 					return true;
 				}
 
-				if (battleChara.NameId == (uint)NPCName.Abharamu)
+				if (battleChara.IsNamed(NPCName.Abharamu))
 				{
 					return true;
 				}
@@ -1398,12 +1410,12 @@ public static class ObjectHelper
 
 			if (DataCenter.IsInTheDungeonsofLyheGhiah)
 			{
-				if (battleChara.NameId == (uint)NPCName.FuathTrickster)
+				if (battleChara.IsNamed(NPCName.FuathTrickster))
 				{
 					return true;
 				}
 
-				if (battleChara.NameId == (uint)NPCName.TheKeeperOfTheKeys)
+				if (battleChara.IsNamed(NPCName.TheKeeperOfTheKeys))
 				{
 					return true;
 				}
@@ -1411,12 +1423,12 @@ public static class ObjectHelper
 
 			if (DataCenter.IsInTheShiftingOubliettesofLyheGhiah)
 			{
-				if (battleChara.NameId == (uint)NPCName.FuathTrickster_9774)
+				if (battleChara.IsNamed(NPCName.FuathTrickster_9774))
 				{
 					return true;
 				}
 
-				if (battleChara.NameId == (uint)NPCName.TheKeeperOfTheKeys_9773)
+				if (battleChara.IsNamed(NPCName.TheKeeperOfTheKeys_9773))
 				{
 					return true;
 				}
@@ -1424,12 +1436,12 @@ public static class ObjectHelper
 
 			if (DataCenter.IsInTheExcitatron6000)
 			{
-				if (battleChara.NameId == (uint)NPCName.RainbowGolem)
+				if (battleChara.IsNamed(NPCName.RainbowGolem))
 				{
 					return true;
 				}
 
-				if (battleChara.NameId == (uint)NPCName.GoldenSupporter)
+				if (battleChara.IsNamed(NPCName.GoldenSupporter))
 				{
 					return true;
 				}
@@ -1437,12 +1449,12 @@ public static class ObjectHelper
 
 			if (DataCenter.IsInTheShiftingGymnasionAgonon)
 			{
-				if (battleChara.NameId == (uint)NPCName.GymnasiouLampas)
+				if (battleChara.IsNamed(NPCName.GymnasiouLampas))
 				{
 					return true;
 				}
 
-				if (battleChara.NameId == (uint)NPCName.GymnasiouLyssa)
+				if (battleChara.IsNamed(NPCName.GymnasiouLyssa))
 				{
 					return true;
 				}
@@ -1450,12 +1462,12 @@ public static class ObjectHelper
 
 			if (DataCenter.IsInCenoteJaJaGural)
 			{
-				if (battleChara.NameId == (uint)NPCName.AlpacaOfFortune)
+				if (battleChara.IsNamed(NPCName.AlpacaOfFortune))
 				{
 					return true;
 				}
 
-				if (battleChara.NameId == (uint)NPCName.UolonOfFortune)
+				if (battleChara.IsNamed(NPCName.UolonOfFortune))
 				{
 					return true;
 				}
@@ -1463,12 +1475,12 @@ public static class ObjectHelper
 
 			if (DataCenter.IsInVaultOneiron)
 			{
-				if (battleChara.NameId == (uint)NPCName.Vaultkeeper)
+				if (battleChara.IsNamed(NPCName.Vaultkeeper))
 				{
 					return true;
 				}
 
-				if (battleChara.NameId == (uint)NPCName.GoldyCat)
+				if (battleChara.IsNamed(NPCName.GoldyCat))
 				{
 					return true;
 				}
@@ -2842,7 +2854,7 @@ public static class ObjectHelper
 			var TritonicGravity = StatusHelper.PlayerHasStatus(false, StatusID.TritonicGravity);
 			var NereidicGravity = StatusHelper.PlayerHasStatus(false, StatusID.NereidicGravity);
 
-			if (battleChara.NameId == (uint)NPCName.Triton && (NereidicGravity || PhobosicGravity))
+			if (battleChara.IsNamed(NPCName.Triton) && (NereidicGravity || PhobosicGravity))
 			{
 				if (Service.Config.InDebug)
 				{
@@ -2851,7 +2863,7 @@ public static class ObjectHelper
 				return true;
 			}
 
-			if (battleChara.NameId == (uint)NPCName.Nereid && (TritonicGravity || PhobosicGravity))
+			if (battleChara.IsNamed(NPCName.Nereid) && (TritonicGravity || PhobosicGravity))
 			{
 				if (Service.Config.InDebug)
 				{
@@ -2860,7 +2872,7 @@ public static class ObjectHelper
 				return true;
 			}
 
-			if (battleChara.NameId == (uint)NPCName.Phobos && (TritonicGravity || NereidicGravity))
+			if (battleChara.IsNamed(NPCName.Phobos) && (TritonicGravity || NereidicGravity))
 			{
 				if (Service.Config.InDebug)
 				{
