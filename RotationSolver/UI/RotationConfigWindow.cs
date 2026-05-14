@@ -912,7 +912,14 @@ public partial class RotationConfigWindow : Window
 		if (overlayTexture?.Handle != null)
 		{
 			ImGui.SetCursorPos(cursor + (Vector2.One * iconSize / 2));
-			ImGui.Image(overlayTexture.Handle, Vector2.One * iconSize / 2);
+			if (DataCenter.IsInOccultCrescentOp)
+			{
+				ImGui.Image(overlayTexture.Handle, overlayTexture.Size / 2);
+			}
+			else
+			{
+				ImGui.Image(overlayTexture.Handle, Vector2.One * iconSize / 2);
+			}
 		}
 	}
 
@@ -1308,13 +1315,15 @@ public partial class RotationConfigWindow : Window
 			Configs.BasicAutoSwitch => $"Auto > {UiString.ConfigWindow_Basic_AutoSwitch.GetDescription()}",
 			Configs.AutoActionUsage => $"Auto > {UiString.ConfigWindow_Auto_ActionUsage.GetDescription()}",
 			Configs.HealingActionCondition => $"Auto > {UiString.ConfigWindow_Auto_HealingCondition.GetDescription()}",
-			Configs.DutySpecifcUltimate => $"Auto > {UiString.ConfigWindow_Duty_Ultimate.GetDescription()}",
-			Configs.DutySpecifcSavage => $"Auto > {UiString.ConfigWindow_Duty_Savage.GetDescription()}",
-			Configs.DutySpecifcExtreme => $"Auto > {UiString.ConfigWindow_Duty_Extreme.GetDescription()}",
-			Configs.DutySpecifcAlliance => $"Auto > {UiString.ConfigWindow_Duty_Alliance.GetDescription()}",
-			Configs.DutySpecifcDungeon => $"Auto > {UiString.ConfigWindow_Duty_Dungeon.GetDescription()}",
-			Configs.DutySpecifcFieldOps => $"Auto > {UiString.ConfigWindow_Duty_FieldOps.GetDescription()}",
-			Configs.DutySpecifcPvP => $"Auto > {UiString.ConfigWindow_Duty_PvP.GetDescription()}",
+			Configs.DutySpecificUltimate => $"Auto > {UiString.ConfigWindow_Duty_Ultimate.GetDescription()}",
+			Configs.DutySpecificSavage => $"Auto > {UiString.ConfigWindow_Duty_Savage.GetDescription()}",
+			Configs.DutySpecificExtreme => $"Auto > {UiString.ConfigWindow_Duty_Extreme.GetDescription()}",
+			Configs.DutySpecificAlliance => $"Auto > {UiString.ConfigWindow_Duty_Alliance.GetDescription()}",
+			Configs.DutySpecificDungeon => $"Auto > {UiString.ConfigWindow_Duty_Dungeon.GetDescription()}",
+			Configs.DutySpecificFieldOps => $"Auto > {UiString.ConfigWindow_Duty_FieldOps.GetDescription()}",
+			Configs.DutySpecificPvP => $"Auto > {UiString.ConfigWindow_Duty_PvP.GetDescription()}",
+			Configs.DutySpecificTreasureDungeon => $"Auto > {UiString.ConfigWindow_Duty_TreasureDungeon.GetDescription()}",
+			Configs.DutySpecificTheMaskedCarnivale => $"Auto > {UiString.ConfigWindow_Duty_TheMaskedCarnivale.GetDescription()}",
 
 			Configs.TargetConfig => $"Target > {UiString.ConfigWindow_Target_Config.GetDescription()}",
 
@@ -1364,33 +1373,41 @@ public partial class RotationConfigWindow : Window
 				_activeTab = RotationConfigWindowTab.Auto;
 				_autoHeader.OpenHeaderByTitle(UiString.ConfigWindow_Auto_HealingCondition.GetDescription());
 				break;
-			case Configs.DutySpecifcUltimate:
+			case Configs.DutySpecificUltimate:
 				_activeTab = RotationConfigWindowTab.Duty;
 				_autoHeader.OpenHeaderByTitle(UiString.ConfigWindow_Duty_Ultimate.GetDescription());
 				break;
-			case Configs.DutySpecifcSavage:
+			case Configs.DutySpecificSavage:
 				_activeTab = RotationConfigWindowTab.Duty;
 				_autoHeader.OpenHeaderByTitle(UiString.ConfigWindow_Duty_Savage.GetDescription());
 				break;
-			case Configs.DutySpecifcExtreme:
+			case Configs.DutySpecificExtreme:
 				_activeTab = RotationConfigWindowTab.Duty;
 				_autoHeader.OpenHeaderByTitle(UiString.ConfigWindow_Duty_Extreme.GetDescription());
 				break;
-			case Configs.DutySpecifcAlliance:
+			case Configs.DutySpecificAlliance:
 				_activeTab = RotationConfigWindowTab.Duty;
 				_autoHeader.OpenHeaderByTitle(UiString.ConfigWindow_Duty_Alliance.GetDescription());
 				break;
-			case Configs.DutySpecifcDungeon:
+			case Configs.DutySpecificDungeon:
 				_activeTab = RotationConfigWindowTab.Duty;
 				_autoHeader.OpenHeaderByTitle(UiString.ConfigWindow_Duty_Dungeon.GetDescription());
 				break;
-			case Configs.DutySpecifcFieldOps:
+			case Configs.DutySpecificFieldOps:
 				_activeTab = RotationConfigWindowTab.Duty;
 				_autoHeader.OpenHeaderByTitle(UiString.ConfigWindow_Duty_FieldOps.GetDescription());
 				break;
-			case Configs.DutySpecifcPvP:
+			case Configs.DutySpecificPvP:
 				_activeTab = RotationConfigWindowTab.Duty;
 				_autoHeader.OpenHeaderByTitle(UiString.ConfigWindow_Duty_PvP.GetDescription());
+				break;
+			case Configs.DutySpecificTreasureDungeon:
+				_activeTab = RotationConfigWindowTab.Duty;
+				_autoHeader.OpenHeaderByTitle(UiString.ConfigWindow_Duty_TreasureDungeon.GetDescription());
+				break;
+			case Configs.DutySpecificTheMaskedCarnivale:
+				_activeTab = RotationConfigWindowTab.Duty;
+				_autoHeader.OpenHeaderByTitle(UiString.ConfigWindow_Duty_TheMaskedCarnivale.GetDescription());
 				break;
 
 			case Configs.TargetConfig:
@@ -1633,16 +1650,17 @@ public partial class RotationConfigWindow : Window
 	{
 		{ UiString.ConfigWindow_Duty_Ultimate.GetDescription, DrawDutySpecificUltimate },
 		{ UiString.ConfigWindow_Duty_Savage.GetDescription, DrawDutySpecificSavage },
-		{ UiString.ConfigWindow_Duty_Extreme.GetDescription, DrawDutySpecifcExtreme },
-		{ UiString.ConfigWindow_Duty_ChaoticAlliance.GetDescription, DrawDutySpecifcChaoticAlliance },
-		{ UiString.ConfigWindow_Duty_Alliance.GetDescription, DrawDutySpecifcAlliance },
-		{ UiString.ConfigWindow_Duty_Dungeon.GetDescription, DrawDutySpecifcDungeon },
-		{ UiString.ConfigWindow_Duty_DeepDungeon.GetDescription, DrawDutySpecifcDeepDungeon },
-		{ UiString.ConfigWindow_Duty_VariantDungeon.GetDescription, DrawDutySpecifcVariantDungeon },
-		{ UiString.ConfigWindow_Duty_FieldOps.GetDescription, DrawDutySpecifcFieldOps },
-		{ UiString.ConfigWindow_Duty_PvP.GetDescription, DrawDutySpecifcPvP },
-		{ UiString.ConfigWindow_Duty_TheMaskedCarnivale.GetDescription, DrawDutySpecifcTheMaskedCarnivale },
-		{ UiString.ConfigWindow_Duty_CrucibleOfTheUnbroken.GetDescription, DrawDutySpecifcCrucibleOfTheUnbroken },
+		{ UiString.ConfigWindow_Duty_Extreme.GetDescription, DrawDutySpecificExtreme },
+		{ UiString.ConfigWindow_Duty_ChaoticAlliance.GetDescription, DrawDutySpecificChaoticAlliance },
+		{ UiString.ConfigWindow_Duty_Alliance.GetDescription, DrawDutySpecificAlliance },
+		{ UiString.ConfigWindow_Duty_Dungeon.GetDescription, DrawDutySpecificDungeon },
+		{ UiString.ConfigWindow_Duty_DeepDungeon.GetDescription, DrawDutySpecificDeepDungeon },
+		{ UiString.ConfigWindow_Duty_VariantDungeon.GetDescription, DrawDutySpecificVariantDungeon },
+		{ UiString.ConfigWindow_Duty_TreasureDungeon.GetDescription, DrawDutySpecificTreasureDungeon },
+		{ UiString.ConfigWindow_Duty_FieldOps.GetDescription, DrawDutySpecificFieldOps },
+		{ UiString.ConfigWindow_Duty_PvP.GetDescription, DrawDutySpecificPvP },
+		{ UiString.ConfigWindow_Duty_TheMaskedCarnivale.GetDescription, DrawDutySpecificTheMaskedCarnivale },
+		{ UiString.ConfigWindow_Duty_CrucibleOfTheUnbroken.GetDescription, DrawDutySpecificCrucibleOfTheUnbroken },
 	})
 	{
 		HeaderSize = HeaderSize,
@@ -1650,51 +1668,55 @@ public partial class RotationConfigWindow : Window
 
 	private static void DrawDutySpecificUltimate()
 	{
-		_allSearchable.DrawItems(Configs.DutySpecifcUltimate);
+		_allSearchable.DrawItems(Configs.DutySpecificUltimate);
 	}
 	private static void DrawDutySpecificSavage()
 	{
-		_allSearchable.DrawItems(Configs.DutySpecifcSavage);
+		_allSearchable.DrawItems(Configs.DutySpecificSavage);
 	}
-	private static void DrawDutySpecifcExtreme()
+	private static void DrawDutySpecificExtreme()
 	{
-		_allSearchable.DrawItems(Configs.DutySpecifcExtreme);
+		_allSearchable.DrawItems(Configs.DutySpecificExtreme);
 	}
-	private static void DrawDutySpecifcChaoticAlliance()
+	private static void DrawDutySpecificChaoticAlliance()
 	{
-		_allSearchable.DrawItems(Configs.DutySpecifcChaoticAlliance);
+		_allSearchable.DrawItems(Configs.DutySpecificChaoticAlliance);
 	}
-	private static void DrawDutySpecifcAlliance()
+	private static void DrawDutySpecificAlliance()
 	{
-		_allSearchable.DrawItems(Configs.DutySpecifcAlliance);
+		_allSearchable.DrawItems(Configs.DutySpecificAlliance);
 	}
-	private static void DrawDutySpecifcDungeon()
+	private static void DrawDutySpecificDungeon()
 	{
-		_allSearchable.DrawItems(Configs.DutySpecifcDungeon);
+		_allSearchable.DrawItems(Configs.DutySpecificDungeon);
 	}
-	private static void DrawDutySpecifcDeepDungeon()
+	private static void DrawDutySpecificDeepDungeon()
 	{
-		_allSearchable.DrawItems(Configs.DutySpecifcDeepDungeon);
+		_allSearchable.DrawItems(Configs.DutySpecificDeepDungeon);
 	}
-	private static void DrawDutySpecifcVariantDungeon()
+	private static void DrawDutySpecificVariantDungeon()
 	{
-		_allSearchable.DrawItems(Configs.DutySpecifcVariantDungeon);
+		_allSearchable.DrawItems(Configs.DutySpecificVariantDungeon);
 	}
-	private static void DrawDutySpecifcFieldOps()
+	private static void DrawDutySpecificTreasureDungeon()
 	{
-		_allSearchable.DrawItems(Configs.DutySpecifcFieldOps);
+		_allSearchable.DrawItems(Configs.DutySpecificTreasureDungeon);
 	}
-	private static void DrawDutySpecifcPvP()
+	private static void DrawDutySpecificFieldOps()
 	{
-		_allSearchable.DrawItems(Configs.DutySpecifcPvP);
+		_allSearchable.DrawItems(Configs.DutySpecificFieldOps);
 	}
-	private static void DrawDutySpecifcTheMaskedCarnivale()
+	private static void DrawDutySpecificPvP()
 	{
-		_allSearchable.DrawItems(Configs.DutySpecifcTheMaskedCarnivale);
+		_allSearchable.DrawItems(Configs.DutySpecificPvP);
 	}
-	private static void DrawDutySpecifcCrucibleOfTheUnbroken()
+	private static void DrawDutySpecificTheMaskedCarnivale()
 	{
-		_allSearchable.DrawItems(Configs.DutySpecifcCrucibleOfTheUnbroken);
+		_allSearchable.DrawItems(Configs.DutySpecificTheMaskedCarnivale);
+	}
+	private static void DrawDutySpecificCrucibleOfTheUnbroken()
+	{
+		_allSearchable.DrawItems(Configs.DutySpecificCrucibleOfTheUnbroken);
 	}
 
 	#endregion

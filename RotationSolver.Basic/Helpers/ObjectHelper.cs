@@ -178,6 +178,18 @@ public static class ObjectHelper
 			return false;
 		}
 
+		// If the mob's owner is a party member it belongs to our party and can be attacked
+		if (Player.Object != null && battleChara.OwnerId != 0)
+		{
+			foreach (var p in Svc.Party)
+			{
+				if (p.GameObject?.GameObjectId == battleChara.OwnerId)
+				{
+					return false;
+				}
+			}
+		}
+
 		// SpecialType but no NamePlateIcon — check whether the mob's event type matches one of the
 		// player-owned content directors that can produce mobs belonging to OTHER players.
 		var ev = battleChara.GetEventType();
@@ -302,7 +314,7 @@ public static class ObjectHelper
             }
         }*/
 
-		if (Service.Config.TargetQuestThings2 && battleChara.IsOthersPlayersMob())
+		if (Service.Config.TargetQuestThings3 && battleChara.IsOthersPlayersMob())
 		{
 			return false;
 		}
@@ -838,6 +850,27 @@ public static class ObjectHelper
 	}
 
 	/// <summary>
+	/// Gets the priority value for treasure hunt nameplate icons.
+	/// Lower values indicate higher priority (1 is highest priority).
+	/// </summary>
+	/// <param name="icon">The nameplate icon ID.</param>
+	/// <returns>
+	/// Priority value (1-5) for treasure hunt icons, or int.MaxValue if not a treasure hunt priority icon.
+	/// </returns>
+	internal static int GetNamePlateIconPriority(uint icon)
+	{
+		return icon switch
+		{
+			60687 => 1, // Treasure hunt icon 1
+			60688 => 2, // Treasure hunt icon 2
+			60689 => 3, // Treasure hunt icon 3
+			60690 => 4, // Treasure hunt icon 4
+			60691 => 5, // Treasure hunt icon 5
+			_ => int.MaxValue
+		};
+	}
+
+	/// <summary>
 	/// Determines whether the specified game object is a top priority hostile target based on its name being listed.
 	/// </summary>
 	/// <param name="battleChara">The battleChara to check.</param>
@@ -870,6 +903,8 @@ public static class ObjectHelper
 	/// </returns>
 	internal static bool IsTopPriorityHostile(this IBattleChara battleChara)
 	{
+		var icon = battleChara.GetNamePlateIcon();
+
 		if (battleChara == null)
 		{
 			return false;
@@ -878,6 +913,19 @@ public static class ObjectHelper
 		if (battleChara.IsAllianceMember() || battleChara.IsParty())
 		{
 			return false;
+		}
+
+		if (Service.Config.Treasuredungeonnumbered && DataCenter.IsInTreasureHunt)
+		{
+			if (icon == 60687 || icon == 60688 || icon == 60689 || icon == 60690 || icon == 60691)
+			{
+				return true;
+			}
+		}
+
+		if (Service.Config.Treasuredungeontimed && battleChara.TreasureDungeonPrio())
+		{
+			return true;
 		}
 
 		if (DataCenter.IsInFate && battleChara.IsForlorn())
@@ -986,8 +1034,6 @@ public static class ObjectHelper
 		{
 			return true;
 		}
-
-		var icon = battleChara.GetNamePlateIcon();
 
 		if (Service.Config.TargetHuntingRelicLevePriority && (icon == 60092 || icon == 60094 || icon == 60096 || icon == 60097 || icon == 60098 || icon == 71244))
 		{
@@ -1306,6 +1352,126 @@ public static class ObjectHelper
 			if (battleChara.NameId == 13978)
 			{
 				return true;
+			}
+		}
+
+		return false;
+	}
+
+	internal static bool TreasureDungeonPrio(this IBattleChara battleChara)
+	{
+		if (DataCenter.IsInTreasureHunt)
+		{
+			if (DataCenter.IsInTheLostCanalsofUznair)
+			{
+				if (battleChara.NameId == (uint)NPCName.NamazuStickywhisker)
+				{
+					return true;
+				}
+			}
+
+			if (DataCenter.IsInTheShiftingAltarsofUznair)
+			{
+				if (battleChara.NameId == (uint)NPCName.GoldWhisker)
+				{
+					return true;
+				}
+
+				if (battleChara.NameId == (uint)NPCName.GoldWhisker_7625)
+				{
+					return true;
+				}
+			}
+
+			if (DataCenter.IsInTheHiddenCanalsofUznair)
+			{
+				if (battleChara.NameId == (uint)NPCName.NamazuStickywhisker)
+				{
+					return true;
+				}
+
+				if (battleChara.NameId == (uint)NPCName.Abharamu)
+				{
+					return true;
+				}
+			}
+
+			if (DataCenter.IsInTheDungeonsofLyheGhiah)
+			{
+				if (battleChara.NameId == (uint)NPCName.FuathTrickster)
+				{
+					return true;
+				}
+
+				if (battleChara.NameId == (uint)NPCName.TheKeeperOfTheKeys)
+				{
+					return true;
+				}
+			}
+
+			if (DataCenter.IsInTheShiftingOubliettesofLyheGhiah)
+			{
+				if (battleChara.NameId == (uint)NPCName.FuathTrickster_9774)
+				{
+					return true;
+				}
+
+				if (battleChara.NameId == (uint)NPCName.TheKeeperOfTheKeys_9773)
+				{
+					return true;
+				}
+			}
+
+			if (DataCenter.IsInTheExcitatron6000)
+			{
+				if (battleChara.NameId == (uint)NPCName.RainbowGolem)
+				{
+					return true;
+				}
+
+				if (battleChara.NameId == (uint)NPCName.GoldenSupporter)
+				{
+					return true;
+				}
+			}
+
+			if (DataCenter.IsInTheShiftingGymnasionAgonon)
+			{
+				if (battleChara.NameId == (uint)NPCName.GymnasiouLampas)
+				{
+					return true;
+				}
+
+				if (battleChara.NameId == (uint)NPCName.GymnasiouLyssa)
+				{
+					return true;
+				}
+			}
+
+			if (DataCenter.IsInCenoteJaJaGural)
+			{
+				if (battleChara.NameId == (uint)NPCName.AlpacaOfFortune)
+				{
+					return true;
+				}
+
+				if (battleChara.NameId == (uint)NPCName.UolonOfFortune)
+				{
+					return true;
+				}
+			}
+
+			if (DataCenter.IsInVaultOneiron)
+			{
+				if (battleChara.NameId == (uint)NPCName.Vaultkeeper)
+				{
+					return true;
+				}
+
+				if (battleChara.NameId == (uint)NPCName.GoldyCat)
+				{
+					return true;
+				}
 			}
 		}
 

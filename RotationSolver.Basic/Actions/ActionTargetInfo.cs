@@ -3640,6 +3640,14 @@ public struct ActionTargetInfo(IBaseAction action)
 			}
 			if (highPriorityHostiles.Count > 0)
 			{
+				// Sort high priority hostiles by nameplate icon priority (lower = higher priority)
+				// For treasure hunt icons, 60687 (1) has highest priority, then 60688 (2), etc.
+				highPriorityHostiles.Sort((a, b) =>
+				{
+					var aPriority = ObjectHelper.GetNamePlateIconPriority(a.GetNamePlateIcon());
+					var bPriority = ObjectHelper.GetNamePlateIconPriority(b.GetNamePlateIcon());
+					return aPriority.CompareTo(bPriority);
+				});
 				battleChara = highPriorityHostiles;
 			}
 
