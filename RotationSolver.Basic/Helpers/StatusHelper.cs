@@ -135,16 +135,24 @@ public static class StatusHelper
 	/// </summary>
 	public static StatusID[] RampartStatus { get; } =
 	[
-		StatusID.Superbolide,
-		StatusID.HallowedGround,
 		StatusID.Rampart,
 		StatusID.Bulwark,
 		StatusID.Bloodwhetting,
+
 		StatusID.Vengeance,
+		StatusID.Damnation,
+
 		StatusID.Sentinel,
+		StatusID.Guardian,
+
 		StatusID.ShadowWall,
+		StatusID.ShadowedVigil,
+
 		StatusID.Nebula,
 		StatusID.GreatNebula,
+
+		StatusID.Superbolide,
+		StatusID.HallowedGround,
 		StatusID.Holmgang_409,
 		StatusID.LivingDead,
 	];

@@ -53,6 +53,7 @@ public partial class CustomRotation
 	static partial void ModifyRampartPvE(ref ActionSetting setting)
 	{
 		setting.StatusProvide = StatusHelper.RampartStatus;
+		setting.TargetType = TargetType.Self;
 	}
 
 	static partial void ModifyBloodbathPvE(ref ActionSetting setting)
