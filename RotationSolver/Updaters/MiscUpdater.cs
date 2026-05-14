@@ -124,7 +124,7 @@ internal static class MiscUpdater
 			Job.ARC => BitmapFontIcon.Archer,
 			Job.THM => BitmapFontIcon.Thaumaturge,
 			Job.ACN => BitmapFontIcon.Arcanist,
-			//Job.BST => BitmapFontIcon.Beastmaster, TODO: BST icon is missing in Dalamud
+			Job.BST => BitmapFontIcon.Beastmaster,
 			_ => BitmapFontIcon.ExclamationRectangle,
 		};
 	}

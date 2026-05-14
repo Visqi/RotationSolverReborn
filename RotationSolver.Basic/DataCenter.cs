@@ -552,6 +552,63 @@ internal static class DataCenter
 
 	#endregion
 
+	#region Treasure Hunt
+	/// <summary>
+	/// 
+	/// </summary>
+	public static bool IsInTreasureHunt => Territory?.ContentType == TerritoryContentType.TreasureHunt;
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public static bool IsInTheAquapolis => TerritoryID == 558;
+
+	/// <summary>
+	/// The Lost Canals of Uznair
+	/// </summary>
+	public static bool IsInTheLostCanalsofUznair => TerritoryID == 712;
+
+	/// <summary>
+	/// The Shifting Altars of Uznair
+	/// </summary>
+	public static bool IsInTheShiftingAltarsofUznair => TerritoryID == 794;
+
+	/// <summary>
+	/// The Hidden Canals of Uznair
+	/// </summary>
+	public static bool IsInTheHiddenCanalsofUznair => TerritoryID == 725;
+
+	/// <summary>
+	/// The Dungeons of Lyhe Ghiah
+	/// </summary>
+	public static bool IsInTheDungeonsofLyheGhiah => TerritoryID == 879;
+
+	/// <summary>
+	/// The Shifting Oubliettes of Lyhe Ghiah
+	/// </summary>
+	public static bool IsInTheShiftingOubliettesofLyheGhiah => TerritoryID == 924;
+
+	/// <summary>
+	/// The Excitatron 6000
+	/// </summary>
+	public static bool IsInTheExcitatron6000 => TerritoryID == 1000;
+
+	/// <summary>
+	/// The Shifting Gymnasion Agonon
+	/// </summary>
+	public static bool IsInTheShiftingGymnasionAgonon => TerritoryID == 1123;
+
+	/// <summary>
+	/// Cenote Ja Ja Gural
+	/// </summary>
+	public static bool IsInCenoteJaJaGural => TerritoryID == 1209;
+
+	/// <summary>
+	/// Vault Oneiron
+	/// </summary>
+	public static bool IsInVaultOneiron => TerritoryID == 1279;
+	#endregion
+
 	#region Bozja
 	/// <summary>
 	/// Determines if the current content is Bozjan Southern Front or Zadnor.
