@@ -641,18 +641,26 @@ internal static class DataCenter
 	public static bool IsInBozja => IsInBozjanFieldOp || IsInDelubrumNormal || IsInDelubrumSavage;
 	#endregion
 
+	/// <summary>
+	///
+	/// </summary>
+	public static bool IsInFieldOperations => Content.ContentType == ECommons.GameHelpers.ContentType.FieldOperations;
+
+	/// <summary>
+	///
+	/// </summary>
+	public static bool IsInFieldRaid => Content.ContentType == ECommons.GameHelpers.ContentType.FieldRaid;
+
 	#region Occult Crescent
 	/// <summary>
-	/// Determines if the current content is Occult
+	/// Determines if the current content is Occult Crescent.
 	/// </summary>
-	public static bool IsInOccultCrescentOp => Content.ContentType == ECommons.GameHelpers.ContentType.FieldOperations
-		&& Territory?.ContentType == TerritoryContentType.OccultCrescent;
+	public static bool IsInOccultCrescentOp => Territory?.ContentType == TerritoryContentType.OccultCrescent;
 
 	/// <summary>
 	/// Determines if the current content is Forked Tower.
 	/// </summary>
-	public static bool IsInForkedTower => IsInOccultCrescentOp
-		&& StatusHelper.PlayerHasStatus(false, StatusID.DutiesAsAssigned_4228);
+	public static bool IsInForkedTower => IsInOccultCrescentOp && StatusHelper.PlayerHasStatus(false, StatusID.DutiesAsAssigned_4228);
 	#endregion
 
 	#region Variant Dungeon
