@@ -26,43 +26,23 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  update-changelog:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Changelog JSON
         shell: pwsh
         run: |
           .github/scripts/generate-changelog.ps1 -Repository "${{ github.repository }}" -Token "${{ secrets.GITHUB_TOKEN }}" -MaxReleases 50
-
-      - name: Commit Changelog
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-
-          if [ -f "docs/changelog.json" ]; then
-            git add docs/changelog.json
-            git diff --staged --quiet || git commit -m "Update changelog [skip ci]"
-            git push
-          else
-            echo "No changelog.json found, skipping commit"
-          fi
-
-  deploy:
-    needs: update-changelog
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v6
-        with:
-          ref: main
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

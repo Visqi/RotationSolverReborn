@@ -14,9 +14,12 @@ param(
 $ErrorActionPreference = "Stop"
 
 Write-Host "Fetching releases from GitHub API..." -ForegroundColor Cyan
+Write-Host "Repository: $Repository" -ForegroundColor Gray
 
 # GitHub API endpoint
-$apiUrl = "https://api.github.com/repos/$Repository/releases"
+$apiUrl = "https://api.github.com/repos/${Repository}/releases?per_page=${MaxReleases}"
+
+Write-Host "API URL: $apiUrl" -ForegroundColor Gray
 
 # Set up headers with authentication
 $headers = @{
@@ -27,7 +30,7 @@ $headers = @{
 
 try {
     # Fetch releases
-    $response = Invoke-RestMethod -Uri "$apiUrl?per_page=$MaxReleases" -Headers $headers -Method Get
+    $response = Invoke-RestMethod -Uri $apiUrl -Headers $headers -Method Get
 
     Write-Host "Found $($response.Count) releases" -ForegroundColor Green
 
