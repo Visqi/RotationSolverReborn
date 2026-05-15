@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Rotation Solver Reborn - Documentation</title>
+	<title>Changelog - Rotation Solver Reborn</title>
 	<style>
 		* {
 			margin: 0;
@@ -41,11 +41,6 @@
 			margin-bottom: 10px;
 		}
 
-		header p {
-			font-size: 1.2em;
-			opacity: 0.9;
-		}
-
 		nav {
 			background: #f8f9fa;
 			padding: 20px 40px;
@@ -71,39 +66,47 @@
 			padding: 40px;
 		}
 
-		section {
+		.release {
 			margin-bottom: 40px;
+			border-left: 4px solid #667eea;
+			padding-left: 20px;
 		}
 
-		h2 {
+		.release-header {
+			display: flex;
+			align-items: center;
+			gap: 15px;
+			margin-bottom: 15px;
+		}
+
+		.version {
+			font-size: 1.8em;
+			font-weight: bold;
 			color: #667eea;
-			margin-bottom: 20px;
-			font-size: 2em;
-			border-bottom: 3px solid #667eea;
-			padding-bottom: 10px;
 		}
 
-		.card {
+		.date {
+			color: #6c757d;
+			font-size: 0.9em;
+		}
+
+		.release-body {
 			background: #f8f9fa;
 			padding: 20px;
 			border-radius: 8px;
-			margin-bottom: 20px;
-			border-left: 4px solid #667eea;
-		}
-
-		.card h3 {
-			color: #764ba2;
-			margin-bottom: 10px;
+			white-space: pre-wrap;
+			font-family: 'Consolas', 'Monaco', monospace;
+			font-size: 0.95em;
 		}
 
 		.badge {
 			display: inline-block;
-			padding: 5px 10px;
-			background: #667eea;
+			padding: 3px 8px;
+			background: #28a745;
 			color: white;
 			border-radius: 3px;
-			font-size: 0.9em;
-			margin-right: 5px;
+			font-size: 0.8em;
+			margin-left: 10px;
 		}
 
 		footer {
@@ -121,80 +124,83 @@
 		footer a:hover {
 			text-decoration: underline;
 		}
+
+		.loading {
+			text-align: center;
+			padding: 40px;
+			color: #667eea;
+			font-size: 1.2em;
+		}
 	</style>
 </head>
 <body>
 	<div class="container">
 		<header>
-			<h1>🎮 Rotation Solver Reborn</h1>
-			<p>FFXIV Combat Automation Plugin - Documentation & Changelogs</p>
+			<h1>📋 Changelog</h1>
+			<p>Release History for Rotation Solver Reborn</p>
 		</header>
 
 		<nav>
-			<a href="#about">About</a>
-			<a href="changelog.html">📋 Changelog</a>
-			<a href="https://github.com/FFXIV-CombatReborn/RotationSolverReborn" target="_blank">GitHub Repository</a>
-			<a href="https://github.com/FFXIV-CombatReborn/RotationSolverReborn/releases" target="_blank">Releases</a>
+			<a href="https://github.com/FFXIV-CombatReborn/RotationSolverReborn/releases" target="_blank">View on GitHub</a>
 		</nav>
 
-		<main>
-			<section id="about">
-				<h2>About Rotation Solver Reborn</h2>
-				<div class="card">
-					<h3>🎯 What is Rotation Solver Reborn?</h3>
-					<p>
-						Rotation Solver Reborn is a powerful combat automation plugin for Final Fantasy XIV,
-						designed to optimize your rotation and improve your gameplay experience.
-					</p>
-				</div>
-
-				<div class="card">
-					<h3>✨ Key Features</h3>
-					<p>
-						<span class="badge">Auto Rotation</span>
-						<span class="badge">Smart Targeting</span>
-						<span class="badge">Customizable</span>
-						<span class="badge">Job Support</span>
-					</p>
-				</div>
-			</section>
-
-			<section id="releases">
-				<h2>Latest Releases</h2>
-				<div class="card">
-					<h3>📦 Release Information</h3>
-					<p>
-						View the complete <a href="changelog.html" style="color: #667eea; font-weight: bold;">Changelog</a> 
-						for detailed information about each release, including new features, bug fixes, and improvements.
-					</p>
-					<p style="margin-top: 10px;">
-						Download the latest version from the 
-						<a href="https://github.com/FFXIV-CombatReborn/RotationSolverReborn/releases/latest" 
-						   style="color: #764ba2; font-weight: bold;" target="_blank">GitHub Releases</a> page.
-					</p>
-				</div>
-			</section>
-
-			<section id="documentation">
-				<h2>Documentation</h2>
-				<div class="card">
-					<h3>📚 Getting Started</h3>
-					<p>
-						For installation instructions, usage guides, and troubleshooting, please visit the 
-						<a href="https://github.com/FFXIV-CombatReborn/RotationSolverReborn#readme" 
-						   style="color: #667eea; font-weight: bold;" target="_blank">README</a> on GitHub.
-					</p>
-				</div>
-			</section>
+		<main id="changelog-content">
+			<div class="loading">Loading changelog...</div>
 		</main>
 
 		<footer>
 			<p>
 				&copy; 2024 Rotation Solver Reborn | 
 				<a href="https://github.com/FFXIV-CombatReborn/RotationSolverReborn">GitHub</a> | 
-				<a href="https://github.com/FFXIV-CombatReborn/RotationSolverReborn/issues">Report Issues</a>
+				Last Updated: <span id="last-updated">-</span>
 			</p>
 		</footer>
 	</div>
+
+	<script>
+		async function loadChangelog() {
+			try {
+				const response = await fetch('changelog.json');
+				const data = await response.json();
+
+				const content = document.getElementById('changelog-content');
+				content.innerHTML = '';
+
+				if (data.releases && data.releases.length > 0) {
+					data.releases.forEach(release => {
+						const releaseDiv = document.createElement('div');
+						releaseDiv.className = 'release';
+
+						const releaseDate = new Date(release.published_at).toLocaleDateString('en-US', {
+							year: 'numeric',
+							month: 'long',
+							day: 'numeric'
+						});
+
+						releaseDiv.innerHTML = `
+							<div class="release-header">
+								<span class="version">${release.tag_name}</span>
+								<span class="date">${releaseDate}</span>
+								${release.prerelease ? '<span class="badge" style="background: #ffc107;">Pre-release</span>' : '<span class="badge">Release</span>'}
+							</div>
+							<div class="release-body">${release.body || 'No release notes provided.'}</div>
+						`;
+
+						content.appendChild(releaseDiv);
+					});
+
+					document.getElementById('last-updated').textContent = new Date(data.generated_at).toLocaleString();
+				} else {
+					content.innerHTML = '<div class="loading">No releases found.</div>';
+				}
+			} catch (error) {
+				console.error('Error loading changelog:', error);
+				document.getElementById('changelog-content').innerHTML = 
+					'<div class="loading" style="color: #dc3545;">Failed to load changelog. Please try again later.</div>';
+			}
+		}
+
+		loadChangelog();
+	</script>
 </body>
 </html>
