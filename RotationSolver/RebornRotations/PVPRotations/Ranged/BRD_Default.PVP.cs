@@ -163,6 +163,14 @@ public sealed class BRD_DefaultPvP : BardRotation
 
 	protected override bool GeneralGCD(out IAction? action)
 	{
+		if (!StatusHelper.PlayerHasStatus(true, StatusID.FrontlinersMarch))
+		{
+			if (ApexArrowPvP.CanUse(out action, skipStatusProvideCheck: true))
+			{
+				return true;
+			}
+		}
+
 		if (HarmonicArrowPvP.CanUse(out action))
 		{
 			return true;
@@ -178,7 +186,7 @@ public sealed class BRD_DefaultPvP : BardRotation
 			return true;
 		}
 
-		if (ApexArrowPvP.CanUse(out action))
+		if (ApexArrowPvP.CanUse(out action, skipStatusProvideCheck: true))
 		{
 			return true;
 		}
