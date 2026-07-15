@@ -187,6 +187,8 @@ internal static class DataCenter
 									  //Gamepad cancel.
 									  || Svc.GamepadState.Raw(Dalamud.Game.ClientState.GamePad.GamepadButtons.R1) >=
 									  0.5f;
+									  //Mouse cancel: holding left and right mouse buttons at the same time.
+									  //|| (Service.Config.PoslockCasting && Service.Config.PosLockMouse && Dalamud.Mousebullshitidk);
 
 	internal static DateTime EffectTime { private get; set; } = DateTime.Now;
 	internal static DateTime EffectEndTime { private get; set; } = DateTime.Now;
