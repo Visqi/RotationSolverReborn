@@ -434,8 +434,8 @@ internal partial class Configs : IPluginConfiguration
 	[UI("", Action = ActionID.ImprovisationPvE, Parent = nameof(PoslockCasting))]
 	public bool PosImprovisation { get; set; } = false;
 
-	//[UI("Unlock movement when pressing both left and right mouse buttons.", Parent = nameof(PoslockCasting))]
-	//public bool PosLockMouse { get; set; } = false;
+	[UI("Unlock movement when pressing both left and right mouse buttons.", Parent = nameof(PoslockCasting))]
+	public bool PosLockMouse { get; set; } = false;
 
 	[ConditionBool, UI("Lock actions when casting Passage Of Arms during AOE mitigations.",
 	Filter = Extra)]
