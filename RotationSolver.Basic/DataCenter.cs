@@ -8,6 +8,7 @@ using ECommons.GameHelpers;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using FFXIVClientStructs.FFXIV.Client.Game.Fate;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Lumina.Excel.Sheets;
@@ -186,9 +187,9 @@ internal static class DataCenter
 									  || Svc.KeyState[Service.Config.PoslockModifier.ToVirtual()]
 									  //Gamepad cancel.
 									  || Svc.GamepadState.Raw(Dalamud.Game.ClientState.GamePad.GamepadButtons.R1) >=
-									  0.5f;
+									  0.5f
 									  //Mouse cancel: holding left and right mouse buttons at the same time.
-									  //|| (Service.Config.PoslockCasting && Service.Config.PosLockMouse && Dalamud.Mousebullshitidk);
+									  || (Service.Config.PosLockMouse && InputManager.IsLeftMouseDown() && InputManager.IsRightMouseDown());
 
 	internal static DateTime EffectTime { private get; set; } = DateTime.Now;
 	internal static DateTime EffectEndTime { private get; set; } = DateTime.Now;
